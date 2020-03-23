@@ -1,8 +1,0 @@
-/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/bin/Debug/netcoreapp3.1/VowelAServer.Shared.deps.json
-/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/bin/Debug/netcoreapp3.1/VowelAServer.Shared.dll
-/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/bin/Debug/netcoreapp3.1/VowelAServer.Shared.pdb
-/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/obj/Debug/netcoreapp3.1/VowelAServer.Shared.csprojAssemblyReference.cache
-/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/obj/Debug/netcoreapp3.1/VowelAServer.Shared.AssemblyInfoInputs.cache
-/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/obj/Debug/netcoreapp3.1/VowelAServer.Shared.AssemblyInfo.cs
-/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/obj/Debug/netcoreapp3.1/VowelAServer.Shared.dll
-/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/obj/Debug/netcoreapp3.1/VowelAServer.Shared.pdb

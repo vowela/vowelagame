@@ -1,0 +1,5 @@
+/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/bin/MacOS/netcoreapp3.1/VowelAServer.Shared.deps.json
+/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/bin/MacOS/netcoreapp3.1/VowelAServer.Shared.dll
+/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/obj/MacOS/netcoreapp3.1/VowelAServer.Shared.AssemblyInfoInputs.cache
+/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/obj/MacOS/netcoreapp3.1/VowelAServer.Shared.AssemblyInfo.cs
+/Users/stanislavkryvenko/Documents/Projects/VowelAGame/Server/VowelAServer.Shared/obj/MacOS/netcoreapp3.1/VowelAServer.Shared.dll

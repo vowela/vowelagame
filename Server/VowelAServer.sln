@@ -1,0 +1,28 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VowelAServer.Shared", "VowelAServer.Shared\VowelAServer.Shared.csproj", "{2B2CF7DC-C267-4972-A639-114E40BCADAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VowelAServer.Server", "VowelAServer.Server\VowelAServer.Server.csproj", "{89DC1632-4050-481E-828C-F4E5A6741847}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		MacOS|Any CPU = MacOS|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B2CF7DC-C267-4972-A639-114E40BCADAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B2CF7DC-C267-4972-A639-114E40BCADAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B2CF7DC-C267-4972-A639-114E40BCADAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B2CF7DC-C267-4972-A639-114E40BCADAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B2CF7DC-C267-4972-A639-114E40BCADAA}.MacOS|Any CPU.ActiveCfg = MacOS|Any CPU
+		{2B2CF7DC-C267-4972-A639-114E40BCADAA}.MacOS|Any CPU.Build.0 = MacOS|Any CPU
+		{89DC1632-4050-481E-828C-F4E5A6741847}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89DC1632-4050-481E-828C-F4E5A6741847}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89DC1632-4050-481E-828C-F4E5A6741847}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89DC1632-4050-481E-828C-F4E5A6741847}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89DC1632-4050-481E-828C-F4E5A6741847}.MacOS|Any CPU.ActiveCfg = MacOS|Any CPU
+		{89DC1632-4050-481E-828C-F4E5A6741847}.MacOS|Any CPU.Build.0 = MacOS|Any CPU
+	EndGlobalSection
+EndGlobal

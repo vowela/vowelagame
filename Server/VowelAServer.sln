@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VowelAServer.Shared", "Vowe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VowelAServer.Server", "VowelAServer.Server\VowelAServer.Server.csproj", "{A0C1EC7B-115F-469B-9DDA-938CAC0D1BF9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VowelAServer.Gameplay", "VowelAServer.Gameplay\VowelAServer.Gameplay.csproj", "{7E595F72-3950-404E-9589-103B2E085877}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,11 @@ Global
 		{A0C1EC7B-115F-469B-9DDA-938CAC0D1BF9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0C1EC7B-115F-469B-9DDA-938CAC0D1BF9}.MacOS|Any CPU.ActiveCfg = MacOS|Any CPU
 		{A0C1EC7B-115F-469B-9DDA-938CAC0D1BF9}.MacOS|Any CPU.Build.0 = MacOS|Any CPU
+		{7E595F72-3950-404E-9589-103B2E085877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E595F72-3950-404E-9589-103B2E085877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E595F72-3950-404E-9589-103B2E085877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E595F72-3950-404E-9589-103B2E085877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E595F72-3950-404E-9589-103B2E085877}.MacOS|Any CPU.ActiveCfg = Release|Any CPU
+		{7E595F72-3950-404E-9589-103B2E085877}.MacOS|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

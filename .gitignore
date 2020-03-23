@@ -13,6 +13,7 @@
 *.pdf
 *.obj
 *.mdb
+.DS_Store
 
 # common images
 *.bmp

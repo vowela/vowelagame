@@ -7,6 +7,6 @@ using VowelAServer.Shared.Data;
 public class RealTimeCompiler : MonoBehaviour
 {
     static void CompileData(ContainerObject container) {
-        
+        Debug.Log(container.LuaCode);
     }
 }

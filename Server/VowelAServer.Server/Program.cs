@@ -1,5 +1,4 @@
 ﻿using System;
-using VowelAServer.Shared.Data;
 
 namespace VowelAServer.Server
 {
@@ -8,7 +7,6 @@ namespace VowelAServer.Server
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            var customObject = new ContainerObject();
         }
     }
 }

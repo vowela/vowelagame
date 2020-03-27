@@ -16,7 +16,7 @@ public class StartupManager : MonoBehaviour
 
         // Parse scene file
         Debug.Log(sceneFile);
-        sceneManager = GetComponent<SceneManager>();
+        sceneManager = GetComponentInChildren<SceneManager>();
         var sceneData = JsonUtility.FromJson<SceneData>(sceneFile);
         sceneManager.CompileScene(sceneData);
     }
@@ -31,7 +31,8 @@ public class StartupManager : MonoBehaviour
             Added = new List<ContainerData>() {
                 new ContainerData() {
                     ContainerName = "Test Name 1",
-                    LuaCode = "--This is test lua code",
+                    LuaCode = @"--This is test lua code
+                    function Update() return 'Ya siel deda' end",
                     Id = child0
                 },
                 new ContainerData() {

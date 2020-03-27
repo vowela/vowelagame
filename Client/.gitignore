@@ -1,4 +1,5 @@
-# eco specific ignore
+# VowelA specific ignore
+/Assets/Shared/*
 /.vs
 
 # Unity ECS

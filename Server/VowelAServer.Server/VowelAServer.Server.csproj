@@ -18,4 +18,20 @@
   <ItemGroup>
     <ProjectReference Include="..\VowelAServer.Shared\VowelAServer.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ENet-CSharp" Version="2.3.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Models\Protocol.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Protocol.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove=".DS_Store" />
+    <None Remove="Models\.DS_Store" />
+  </ItemGroup>
 </Project>

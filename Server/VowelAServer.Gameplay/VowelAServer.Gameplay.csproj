@@ -10,4 +10,10 @@
   <ItemGroup>
     <PackageReference Include="MoonSharp" Version="2.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VowelAServer.Shared\VowelAServer.Shared.csproj" />
+  </ItemGroup>
 </Project>

@@ -5,8 +5,7 @@ using ENet;
 using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Authorization;
 using VowelAServer.Server.Controllers;
-using VowelAServer.Server.Models;
-using VowelAServer.Shared.Data.Multiplayer;
+using VowelAServer.Server.Net;
 using VowelAServer.Shared.Interfaces;
 
 namespace VowelAServer.Server

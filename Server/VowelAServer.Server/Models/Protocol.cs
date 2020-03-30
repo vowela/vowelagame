@@ -1,9 +1,22 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace VowelAServer.Server.Models
 {
     public class Protocol
     {
+        public static byte[] SerializeData(byte code, string json)
+        {
+            var protocol = new Protocol();
+            return protocol.Serialize(code, json);
+        }
+
+        public static byte[] SerializeData(byte code, uint value)
+        {
+            var protocol = new Protocol();
+            return protocol.Serialize(code, value);
+        }
+
         private void InitWriter(int size)
         {
             m_buffer = new byte[size];
@@ -26,24 +39,22 @@ namespace VowelAServer.Server.Models
             return m_buffer;
         }
 
-        public byte[] Serialize(byte code, uint value, float x, float y)
+        public byte[] Serialize(byte code, string json)
         {
-            const int bufSize = sizeof(byte) + sizeof(int) + sizeof(float) + sizeof(float);
+            var bufSize = sizeof(byte) + System.Text.Encoding.ASCII.GetByteCount(json) * sizeof(char);
             InitWriter(bufSize);
             m_writer.Write(code);
-            m_writer.Write(value);
-            m_writer.Write(x);
-            m_writer.Write(y);
+            m_writer.Write(json);
             return m_buffer;
         }
 
-        public void Deserialize(byte[] buf, out byte code, out int value)
+        public void Deserialize(byte[] buf, out byte code, out string json)
         {
             InitReader(buf);
             m_stream.Write(buf, 0, buf.Length);
             m_stream.Position = 0;
             code = m_reader.ReadByte();
-            value = m_reader.ReadInt32();
+            json = m_reader.ReadString();
         }
 
         private BinaryWriter m_writer;

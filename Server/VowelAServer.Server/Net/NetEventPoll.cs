@@ -3,7 +3,7 @@ using System.IO;
 using ENet;
 using VowelAServer.Shared.Data.Multiplayer;
 
-namespace VowelAServer.Server.Controllers
+namespace VowelAServer.Server.Net
 {
     public class NetEventPoll
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ENet;
-using VowelAServer.Server.Controllers;
+using VowelAServer.Server.Net;
 using VowelAServer.Server.Models;
 using VowelAServer.Shared.Data.Multiplayer;
 
@@ -20,66 +20,32 @@ namespace VowelAServer.Server.Authorization
         private void NetEventPoll_ServerEventHandler(object sender, PacketId packetId)
         {
             var netEvent = (Event)sender;
+            var playerId = netEvent.Peer.ID;
+
             if (packetId == PacketId.LoginRequest)
             {
-                var playerId = netEvent.Peer.ID;
-                SendLoginResponse(ref netEvent, playerId);
-                BroadcastLoginEvent(playerId);
-                foreach (var player in players)
-                    SendLoginEvent(ref netEvent, player.Id);
+                var data = Protocol.SerializeData((byte) PacketId.LoginResponse, playerId);
+                NetController.SendData(data, ref netEvent);
+
+                data = Protocol.SerializeData((byte)PacketId.LoginEvent, playerId);
+                NetController.SendData(data);
+                /*foreach (var player in players)
+                {
+                    data = Protocol.SerializeData((byte)PacketId.LoginEvent, playerId);
+                    NetController.SendData(data, ref netEvent);
+                }*/
                 players.Add(new Player(playerId));
             }
             else if (packetId == PacketId.LogoutEvent)
             {
-                var playerId = netEvent.Peer.ID;
-                HandleLogout(playerId);
+                var player = new Player(playerId);
+                if (!players.Contains(player))
+                    return;
+
+                players.Remove(player);
+                var data = Protocol.SerializeData((byte)PacketId.LogoutEvent, playerId);
+                NetController.SendData(data);
             }
-        }
-
-        private void HandleLogout(uint playerId)
-        {
-            var player = new Player(playerId);
-            if (!players.Contains(player))
-                return;
-
-            players.Remove(player);
-            BroadcastLogoutEvent(playerId);
-        }
-
-        private void BroadcastLogoutEvent(uint playerId)
-        {
-            var protocol = new Protocol();
-            var buffer = protocol.Serialize((byte)PacketId.LogoutEvent, playerId);
-            var packet = default(Packet);
-            packet.Create(buffer);
-            Server.HostInstance.Broadcast(0, ref packet);
-        }
-
-        private void SendLoginResponse(ref Event netEvent, uint playerId)
-        {
-            var protocol = new Protocol();
-            var buffer = protocol.Serialize((byte)PacketId.LoginResponse, playerId);
-            var packet = default(Packet);
-            packet.Create(buffer);
-            netEvent.Peer.Send(0, ref packet);
-        }
-
-        private void SendLoginEvent(ref Event netEvent, uint playerId)
-        {
-            var protocol = new Protocol();
-            var buffer = protocol.Serialize((byte)PacketId.LoginEvent, playerId);
-            var packet = default(Packet);
-            packet.Create(buffer);
-            netEvent.Peer.Send(0, ref packet);
-        }
-
-        private void BroadcastLoginEvent(uint playerId)
-        {
-            var protocol = new Protocol();
-            var buffer = protocol.Serialize((byte)PacketId.LoginEvent, playerId);
-            var packet = default(Packet);
-            packet.Create(buffer);
-            Server.HostInstance.Broadcast(0, ref packet);
         }
     }
 }

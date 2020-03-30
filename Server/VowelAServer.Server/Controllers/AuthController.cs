@@ -29,11 +29,13 @@ namespace VowelAServer.Server.Authorization
 
                 data = Protocol.SerializeData((byte)PacketId.LoginEvent, playerId);
                 NetController.SendData(data);
-                /*foreach (var player in players)
+                /* TODO: IS IT NECESSARY ??
+                foreach (var player in players)
                 {
                     data = Protocol.SerializeData((byte)PacketId.LoginEvent, playerId);
                     NetController.SendData(data, ref netEvent);
-                }*/
+                }
+                */
                 players.Add(new Player(playerId));
             }
             else if (packetId == PacketId.LogoutEvent)

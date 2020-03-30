@@ -16,6 +16,7 @@ namespace VowelAServer.Server
         public static readonly Host HostInstance = new Host();
         public static AuthController AuthController;
         public static LuaController LuaController;
+        public static MenuController MenuController;
 
         private static void InitTickables()
         {
@@ -28,7 +29,8 @@ namespace VowelAServer.Server
         private static void InitControllers()
         {
             AuthController = new AuthController();
-            LuaController = new LuaController();
+            LuaController  = new LuaController();
+            MenuController = new MenuController();
         }
 
         static void Main(string[] args)

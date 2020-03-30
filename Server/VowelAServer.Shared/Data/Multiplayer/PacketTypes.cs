@@ -10,6 +10,8 @@ namespace VowelAServer.Shared.Data.Multiplayer
         LogoutEvent       = 4,
         LuaRequest        = 5,
         SceneDataRequest  = 6,
-        SceneDataResponse = 7
+        SceneDataResponse = 7,
+        MenuRequest       = 8,
+        MenuResponse      = 9
     }
 }

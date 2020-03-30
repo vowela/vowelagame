@@ -1,22 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Server;
 using UnityEngine;
 using VowelAServer.Shared.Data;
+using VowelAServer.Shared.Data.Multiplayer;
 
 public class ContextMenuManager : MonoBehaviour
 {
     public GameObject ContextMenuPrefab;
 
     private GameObject contextMenuInstance;
+    private ContextMenu contextMenu;
+
+    private void Start() {
+        ConnectionManager.ClientEventHandler += NetEventPoll_ServerEventHandler;
+    }
 
     private void Update() {
         if (Input.GetMouseButtonUp(0)) {
             if (contextMenuInstance != null)
                 contextMenuInstance.GetComponent<ContextMenu>().HideMenu();
         } else if (Input.GetMouseButtonDown(1)) {
+            if (!AuthController.Authorized) return;
+
             if (contextMenuInstance == null)
                 contextMenuInstance = Instantiate(ContextMenuPrefab, Vector3.zero, Quaternion.identity, UIManager.Instance.CanvasUI.transform);
-            var contextMenu = contextMenuInstance.GetComponent<ContextMenu>();
+            contextMenu = contextMenuInstance.GetComponent<ContextMenu>();
             contextMenu.SetPosition();
 
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -25,34 +34,32 @@ public class ContextMenuManager : MonoBehaviour
             } else {
                 // World space scripting
                 // Call Server to fetch context menu data
-                var menuJson = TestWorldContextMenu();
-
-                // Creating context menu based on json data
-                var menuData = JsonUtility.FromJson<MenuData>(menuJson);
-                var contextMenuData = new ContextMenuData();
-                foreach (var menuButton in menuData.ButtonData) {
-                    contextMenuData.ButtonData.Add(new ContextMenuButtonData {
-                            ButtonText = menuButton.ButtonText,
-                            LuaCompiler = new RealTimeCompiler(menuButton.LuaCode)
-                        });
-                }
-                contextMenu.InitContextMenu(contextMenuData);
+                var data = Protocol.SerializeData((byte)PacketId.MenuRequest, "context");
+                NetController.SendData(data);
             }
         }
     }
 
-    private string TestWorldContextMenu() {
-        var outJson = "";
-        var testingJson = new MenuData() {
-            ButtonData = new List<MenuButtonData>() {
-                new MenuButtonData {
-                    ButtonText = "Новый объект",
-                    LuaCode = "function OnClick() CreateGameObject('New Object Init') end"
-                }
-            }
-        };
+    private void NetEventPoll_ServerEventHandler(object sender, PacketId packetId){
+        var netEvent = (ENet.Event) sender;
+        if (packetId == PacketId.MenuResponse) {
+            var protocol = new Protocol();
+            
+            var readBuffer = new byte[netEvent.Packet.Length];
+            netEvent.Packet.CopyTo(readBuffer);
 
-        outJson = JsonUtility.ToJson(testingJson);
-        return outJson;
+            protocol.Deserialize(readBuffer, out var code, out var contextData);
+
+            // Creating context menu based on json data
+            var menuData = JsonUtility.FromJson<MenuData>(contextData);
+            var contextMenuData = new ContextMenuData();
+            foreach (var menuButton in menuData.ButtonData) {
+                contextMenuData.ButtonData.Add(new ContextMenuButtonData {
+                        ButtonText = menuButton.ButtonText,
+                        LuaCompiler = new RealTimeCompiler(menuButton.LuaCode)
+                    });
+            }
+            contextMenu.InitContextMenu(contextMenuData);
+        }
     }
 }

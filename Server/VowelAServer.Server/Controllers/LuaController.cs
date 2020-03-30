@@ -1,7 +1,10 @@
 ﻿using System;
 using ENet;
+using Newtonsoft.Json;
+using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Models;
 using VowelAServer.Server.Net;
+using VowelAServer.Shared.Data;
 using VowelAServer.Shared.Data.Multiplayer;
 
 namespace VowelAServer.Server.Controllers
@@ -19,8 +22,15 @@ namespace VowelAServer.Server.Controllers
             if (packetId == PacketId.SceneDataRequest)
             {
                 Console.WriteLine("Requested scene data");
-                var data = Protocol.SerializeData((byte)PacketId.SceneDataResponse, "Hey beba");
-                NetController.SendData(data, ref senderEvent);
+                if (WorldSimulation.Instance != null) {
+                    var sceneChanges = new SceneData()
+                    {
+                        Added = WorldSimulation.Instance.Scene
+                    };
+                    var json = JsonConvert.SerializeObject(sceneChanges);
+                    var data = Protocol.SerializeData((byte)PacketId.SceneDataResponse, json);
+                    NetController.SendData(data, ref senderEvent);
+                }
             }
         }
     }

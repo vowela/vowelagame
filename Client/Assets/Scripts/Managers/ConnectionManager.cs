@@ -88,7 +88,7 @@ public class ConnectionManager : MonoBehaviour
             case ENet.EventType.Receive:
                 Debug.Log("Packet received from server - Channel ID: " + netEvent.ChannelID + ", Data length: " + netEvent.Packet.Length);
                 
-                var readBuffer = new byte[1024];
+                var readBuffer = new byte[netEvent.Packet.Length];
                 var readStream = new MemoryStream(readBuffer);
                 var reader = new BinaryReader(readStream);
 

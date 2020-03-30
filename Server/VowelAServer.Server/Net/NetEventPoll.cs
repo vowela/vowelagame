@@ -40,7 +40,7 @@ namespace VowelAServer.Server.Net
                         break;
                     case EventType.Receive:
                         //Console.WriteLine("Packet received from - ID: " + netEvent.Peer.ID + ", IP: " + netEvent.Peer.IP + ", Channel ID: " + netEvent.ChannelID + ", Data length: " + netEvent.Packet.Length
-                        var readBuffer = new byte[1024];
+                        var readBuffer = new byte[netEvent.Packet.Length];
                         var readStream = new MemoryStream(readBuffer);
                         var reader = new BinaryReader(readStream);
 

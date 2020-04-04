@@ -20,7 +20,7 @@ public class StartupManager : MonoBehaviour
     void Update() 
     {
         if (!isSceneLoaded && AuthController.Authorized)
-        {;
+        {
             // Start attempt to connect to server
             // Download a scene file
             var data = Protocol.SerializeData((byte)PacketId.SceneDataRequest, 0);

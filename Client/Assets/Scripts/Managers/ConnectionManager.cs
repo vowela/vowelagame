@@ -19,6 +19,7 @@ public class ConnectionManager : MonoBehaviour
     void Awake ()
     {
         Application.runInBackground = true;
+        Application.targetFrameRate = 60;
         InitENet();
     }
 
@@ -58,7 +59,7 @@ public class ConnectionManager : MonoBehaviour
 
         if (Client.CheckEvents(out netEvent) <= 0)
         {
-            if (Client.Service(15, out netEvent) <= 0)
+            if (Client.Service(0, out netEvent) <= 0)
                 return;
         }
 

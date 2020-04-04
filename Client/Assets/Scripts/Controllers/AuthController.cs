@@ -18,6 +18,7 @@ public class AuthController : MonoBehaviour
     private void NetEventPoll_ServerEventHandler(object sender, PacketId packetId){
         var netEvent = (ENet.Event) sender;
         if (packetId == PacketId.LoginEvent) {
+            
         }
     }
 }

@@ -12,6 +12,7 @@ namespace VowelAServer.Server.Controllers
     public class MenuController
     {
         public MenuData ContextMenu;
+        public MenuData ObjectMenu;
 
         public MenuController()
         {
@@ -31,12 +32,14 @@ namespace VowelAServer.Server.Controllers
                 var protocol = new Protocol();
                 protocol.Deserialize(readBuffer, out var code, out var type);
 
+                var json = "";
                 if (type == "context")
-                {
-                    var json = JsonConvert.SerializeObject(ContextMenu);
-                    var data = Protocol.SerializeData((byte)PacketId.MenuResponse, json);
-                    NetController.SendData(data);
-                }
+                    json = JsonConvert.SerializeObject(ContextMenu);
+                else if (type == "object")
+                    json = JsonConvert.SerializeObject(ObjectMenu);
+
+                var data = Protocol.SerializeData((byte)PacketId.MenuResponse, json);
+                NetController.SendData(data);
             }
         }
 
@@ -46,12 +49,22 @@ namespace VowelAServer.Server.Controllers
             {
                 ButtonData = new List<MenuButtonData>() {
                     new MenuButtonData {
-                        ButtonText = "Новый объект",
-                        LuaCode = "function OnClick() CreateGameObject('New Object Init') end"
+                        ButtonText = "New Object",
+                        LuaCode = @"function OnClick() CreateObject(Player.GetPosition()) end"
+                    }
+                }
+            };
+            ObjectMenu = new MenuData()
+            {
+                ButtonData = new List<MenuButtonData>()
+                {
+                    new MenuButtonData {
+                        ButtonText = "Child Object",
+                        LuaCode = "function OnClick() CreateObject(Player.GetPosition()) end"
                     },
                     new MenuButtonData {
-                        ButtonText = "Привет",
-                        LuaCode = "function OnClick() CreateGameObject('New Object Init') end"
+                        ButtonText = "Edit Logic",
+                        LuaCode = "function OnClick() EditLogic() end"
                     }
                 }
             };

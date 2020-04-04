@@ -37,5 +37,4 @@ public class MovementController : MonoBehaviour
         velocity.y += Gravity * Time.deltaTime;
         Controller.Move(velocity * Time.deltaTime);
     }
-
 }

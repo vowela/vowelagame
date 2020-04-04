@@ -50,13 +50,20 @@ namespace VowelAServer.Server
 
             Console.WriteLine($"Circle ENet Server started on {port}");
 
-            while (!Console.KeyAvailable)
+            var continueThread = true;
+            while (continueThread)
             {
                 foreach (var tickable in Tickables)
                 {
                     tickable.Tick();
                 }
+
                 NetEventPoll.CheckPoll();
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey();
+                    if (key.Key == ConsoleKey.Escape) continueThread = false;
+                }
             }
             HostInstance.Flush();
 

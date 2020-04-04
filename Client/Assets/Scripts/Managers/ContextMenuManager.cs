@@ -7,6 +7,7 @@ using VowelAServer.Shared.Data.Multiplayer;
 
 public class ContextMenuManager : MonoBehaviour
 {
+    public LayerMask ObjectsMask;
     public GameObject ContextMenuPrefab;
 
     private GameObject contextMenuInstance;
@@ -29,14 +30,16 @@ public class ContextMenuManager : MonoBehaviour
             contextMenu.SetPosition();
 
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit, 100.0f)) {
+            byte[] data;
+            if (Physics.Raycast(ray, out var hit, 100.0f, ObjectsMask)) {
                 // Object scripting
+                data = Protocol.SerializeData((byte)PacketId.MenuRequest, "object");
             } else {
                 // World space scripting
                 // Call Server to fetch context menu data
-                var data = Protocol.SerializeData((byte)PacketId.MenuRequest, "context");
-                NetController.SendData(data);
+                data = Protocol.SerializeData((byte)PacketId.MenuRequest, "context");
             }
+            NetController.SendData(data);
         }
     }
 

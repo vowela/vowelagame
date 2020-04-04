@@ -72,7 +72,7 @@ MonoBehaviour:
   GroundDistance: 0.4
   GroundMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 768
   JumpHeight: 3
   PlayerMesh: {fileID: 5922197367646141344}
 --- !u!1 &5922197366077802330

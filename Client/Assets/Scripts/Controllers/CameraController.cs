@@ -30,10 +30,4 @@ public class CameraController : MonoBehaviour
         }
 
     }
-
-    private void FixedUpdate() {
-        if (Cursor.lockState == CursorLockMode.Locked) {
-        }
-    }
-
 }

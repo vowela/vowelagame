@@ -1,6 +1,4 @@
 # DO not check in binary files!
-/Client/Assets/Shared/VowelAServer.Shared.dll
-/Client/Assets/Shared/VowelAServer.Shared.dll.meta
 
 # Unity memory captures
 /Client/MemoryCaptures

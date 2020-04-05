@@ -13,7 +13,7 @@ public class Container : MonoBehaviour
     public void SetData(ContainerData data) {
         this.data = data;
         if (!string.IsNullOrEmpty(this.data.LuaCode)) {
-            ContainerScript = new RealTimeCompiler();
+            ContainerScript = new RealTimeCompiler(this);
             ContainerScript.CompileData(this.data.LuaCode);
         }
     }

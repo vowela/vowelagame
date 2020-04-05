@@ -16,7 +16,7 @@ namespace VowelAServer.Gameplay.Controllers
         public SceneController SceneController = new SceneController();
 
         private float lastSavedTime;
-        private float timeToSave = 15000f; // 5 mins ( 300000 )
+        private float timeToSave = 5000f; // 5 mins ( 300000 )
 
         public WorldSimulation()
         {

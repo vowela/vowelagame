@@ -1,7 +1,5 @@
 # DO not check in binary files!
-
-#folders
-/Content
+*.dll
 
 # Unity memory captures
 /Client/MemoryCaptures

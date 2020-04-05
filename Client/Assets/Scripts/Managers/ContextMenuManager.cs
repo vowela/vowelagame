@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Server;
 using UnityEngine;
 using VowelAServer.Shared.Data;
@@ -54,7 +55,7 @@ public class ContextMenuManager : MonoBehaviour
             protocol.Deserialize(readBuffer, out var code, out var contextData);
 
             // Creating context menu based on json data
-            var menuData = JsonUtility.FromJson<MenuData>(contextData);
+            var menuData = JsonConvert.DeserializeObject<MenuData>(contextData);
             var contextMenuData = new ContextMenuData();
             foreach (var menuButton in menuData.ButtonData) {
                 contextMenuData.ButtonData.Add(new ContextMenuButtonData {

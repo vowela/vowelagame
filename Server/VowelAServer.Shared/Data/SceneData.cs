@@ -6,7 +6,8 @@ namespace VowelAServer.Shared.Data
     [Serializable]
     public class SceneData
     {
-        public List<ContainerData> Added = new List<ContainerData>();
-        public List<string> Removed      = new List<string>();
+        public HashSet<ContainerData> Added   = new HashSet<ContainerData>();
+        public HashSet<ContainerData> Changed = new HashSet<ContainerData>();
+        public HashSet<string> Removed        = new HashSet<string>();
     }
 }

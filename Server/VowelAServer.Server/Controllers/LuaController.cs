@@ -25,7 +25,7 @@ namespace VowelAServer.Server.Controllers
                 if (WorldSimulation.Instance != null) {
                     var sceneChanges = new SceneData()
                     {
-                        Added = WorldSimulation.Instance.Scene
+                        Added = WorldSimulation.Instance.SceneController.Scene.SceneData
                     };
                     var json = JsonConvert.SerializeObject(sceneChanges);
                     var data = Protocol.SerializeData((byte)PacketId.SceneDataResponse, json);

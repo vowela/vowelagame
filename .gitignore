@@ -1,5 +1,5 @@
 # DO not check in binary files!
-*.dll
+/Client/Assets/Shared/*.dll
 
 # Unity memory captures
 /Client/MemoryCaptures

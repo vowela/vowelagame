@@ -14,10 +14,10 @@ public class ConnectionManager : MonoBehaviour
     public static Host Client;
     public string Ip = "127.0.0.1";
     public ushort Port = 6005;
-    public Address address;
+    public Address Address;
     private int skipFrame = 0;
 
-    public bool tryConnect = true;
+    private bool tryConnect = true;
 
     void Awake ()
     {
@@ -46,10 +46,11 @@ public class ConnectionManager : MonoBehaviour
     {
         ENet.Library.Initialize();
         Client = new Host();
-        address = new Address();
+        Address = new Address();
 
-        address.SetHost(Ip);
-        address.Port = Port;
+        Address.SetHost(Ip);
+        Address.Port = Port;
+
         Client.Create();
         
         Debug.Log("Connecting");
@@ -119,6 +120,6 @@ public class ConnectionManager : MonoBehaviour
         if (!tryConnect)
             return;
 
-        CurrentPeer = Client.Connect(address);
+        CurrentPeer = Client.Connect(Address);
     }
 }

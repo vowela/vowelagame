@@ -14,7 +14,10 @@ public class ConnectionManager : MonoBehaviour
     public static Host Client;
     public string Ip = "127.0.0.1";
     public ushort Port = 6005;
+    public Address Address;
     private int skipFrame = 0;
+
+    private bool tryConnect = true;
 
     void Awake ()
     {
@@ -43,14 +46,15 @@ public class ConnectionManager : MonoBehaviour
     {
         ENet.Library.Initialize();
         Client = new Host();
-        Address address = new Address();
+        Address = new Address();
 
-        address.SetHost(Ip);
-        address.Port = Port;
+        Address.SetHost(Ip);
+        Address.Port = Port;
+
         Client.Create();
         
         Debug.Log("Connecting");
-        CurrentPeer = Client.Connect(address);
+        Connect();
     }
 
     private void UpdateENet()
@@ -80,10 +84,14 @@ public class ConnectionManager : MonoBehaviour
 
             case ENet.EventType.Disconnect:
                 Debug.Log("Client disconnected from server");
+
+                Connect();
                 break;
 
             case ENet.EventType.Timeout:
                 Debug.Log("Client connection timeout");
+
+                Connect();
                 break;
 
             case ENet.EventType.Receive:
@@ -106,5 +114,12 @@ public class ConnectionManager : MonoBehaviour
 
         if (netEvent.Type == ENet.EventType.Receive)
             netEvent.Packet.Dispose();
+    }
+
+    private void Connect() {
+        if (!tryConnect)
+            return;
+
+        CurrentPeer = Client.Connect(Address);
     }
 }

@@ -4,7 +4,9 @@ using ENet;
 using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Authorization;
 using VowelAServer.Server.Controllers;
+using VowelAServer.Server.Models;
 using VowelAServer.Server.Net;
+using VowelAServer.Shared.Data.Enums;
 using VowelAServer.Shared.Interfaces;
 
 namespace VowelAServer.Server
@@ -38,6 +40,15 @@ namespace VowelAServer.Server
         {
             InitTickables();
             InitControllers();
+
+            var user = new User()
+            {
+                Login = "Admin",
+                HashedPassword = "Admin",
+                Roles = Roles.User | Roles.Admin,
+            };
+
+            // UserService.CreateUser(user);
 
             const ushort port = 6005;
             const int maxClients = 100;

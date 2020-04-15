@@ -33,7 +33,6 @@
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="Data\Math\" />
     <Folder Include="Data\Multiplayer\" />
     <Folder Include="Interfaces\" />

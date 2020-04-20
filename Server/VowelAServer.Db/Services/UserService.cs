@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using VowelAServer.Server.Models;
 
-namespace VowelAServer.Server.Services
+namespace VowelAServer.Db.Services
 {
-    class UserService
+    public class UserService
     {
         public static void CreateUser(User user)
         {
-            using (var db = new LiteDatabase(@"VowelAData.db"))
+            using (var db = new LiteDatabase(DbContext.DbPath))
             {
                 var users = db.GetCollection<User>("users");
 

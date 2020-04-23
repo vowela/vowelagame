@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -16,6 +16,7 @@
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\VowelAServer.Db\VowelAServer.Db.csproj" />
     <ProjectReference Include="..\VowelAServer.Shared\VowelAServer.Shared.csproj" />
     <ProjectReference Include="..\VowelAServer.Gameplay\VowelAServer.Gameplay.csproj" />
   </ItemGroup>

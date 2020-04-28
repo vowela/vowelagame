@@ -57,6 +57,15 @@ namespace Server
             json = m_reader.ReadString();
         }
 
+        public void Deserialize(byte[] buf, out byte code, out byte flag)
+        {
+            InitReader(buf);
+            m_stream.Write(buf, 0, buf.Length);
+            m_stream.Position = 0;
+            code = m_reader.ReadByte();
+            flag = m_reader.ReadByte();
+        }
+
         private BinaryWriter m_writer;
         private BinaryReader m_reader;
         private MemoryStream m_stream;

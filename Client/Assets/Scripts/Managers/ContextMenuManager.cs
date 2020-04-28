@@ -52,7 +52,7 @@ public class ContextMenuManager : MonoBehaviour
             var readBuffer = new byte[netEvent.Packet.Length];
             netEvent.Packet.CopyTo(readBuffer);
 
-            protocol.Deserialize(readBuffer, out var code, out var contextData);
+            protocol.Deserialize(readBuffer, out var code, out string contextData);
 
             // Creating context menu based on json data
             var menuData = JsonConvert.DeserializeObject<MenuData>(contextData);

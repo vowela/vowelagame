@@ -26,7 +26,7 @@ public class SceneManager : MonoBehaviour
         var readBuffer = new byte[netEvent.Packet.Length];
         netEvent.Packet.CopyTo(readBuffer);
 
-        protocol.Deserialize(readBuffer, out var code, out var sceneFile);
+        protocol.Deserialize(readBuffer, out var code, out string sceneFile);
         var sceneData = JsonConvert.DeserializeObject<SceneData>(sceneFile);
         return sceneData;
     }

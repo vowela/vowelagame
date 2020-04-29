@@ -4,6 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using VowelAServer.Gameplay.Models;
 using VowelAServer.Shared.Data;
+using VowelAServer.Shared.Utils;
 
 namespace VowelAServer.Gameplay.Controllers
 {
@@ -18,25 +19,9 @@ namespace VowelAServer.Gameplay.Controllers
             {
                 if (string.IsNullOrEmpty(sceneDataPath))
                 {
-                    var lastParent = Directory.GetParent(Path.Combine(Directory.GetCurrentDirectory()));
-                    var done = false;
-                    for (var i = 0; i < 5; i++)
-                    {
-                        foreach (var dir in lastParent.GetDirectories())
-                        {
-                            if (dir.Name == "Storage")
-                            {
-                                done = true;
-                                sceneDataPath = dir.FullName.ToString();
-                                break;
-                            }
-                        }
-                        if (done) break;
-                        lastParent = lastParent.Parent;
-                        sceneDataPath = lastParent.ToString();
-                    }
-                    sceneDataPath += @"/scene_file.json";
+                    sceneDataPath = Utils.GetDirPath("Storage") + @"/scene_file.json";
                 }
+
                 return sceneDataPath;
             }
         }

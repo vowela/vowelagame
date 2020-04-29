@@ -28,7 +28,6 @@ namespace VowelAServer.Shared.Utils
                 if (done) break;
 
                 lastParent = lastParent.Parent;
-
                 path = lastParent.ToString();
             }
 

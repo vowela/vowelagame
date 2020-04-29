@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using MoonSharp.Interpreter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VowelAServer.Gameplay.Models;
@@ -27,6 +28,10 @@ namespace VowelAServer.Gameplay.Controllers
 
         public void Tick()
         {
+            foreach (var sceneObject in SceneController.Scene.SceneData)
+            {
+                //sceneObject.LuaCode
+            }
             if (WorldTime.Instance().GetWorldTime() > lastSavedTime + timeToSave)
             {
                 Console.WriteLine("Save the server data..");

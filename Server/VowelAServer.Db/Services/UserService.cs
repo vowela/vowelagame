@@ -26,7 +26,7 @@ namespace VowelAServer.Db.Services
 
         public static User GetUserByLogin(string login)
         {
-            using (var db = new LiteDatabase(@"VowelAData.db"))
+            using (var db = new LiteDatabase(DbContext.DbPath))
             {
                 var users = db.GetCollection<User>("users");
 

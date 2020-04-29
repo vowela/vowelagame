@@ -5,6 +5,9 @@ using ENet;
 using VowelAServer.Server.Net;
 using VowelAServer.Server.Models;
 using VowelAServer.Shared.Data.Multiplayer;
+using Newtonsoft.Json;
+using VowelAServer.Shared.Models.Dtos;
+using VowelAServer.Db.Services;
 
 namespace VowelAServer.Server.Authorization
 {
@@ -17,6 +20,17 @@ namespace VowelAServer.Server.Authorization
             NetEventPoll.ServerEventHandler += NetEventPoll_ServerEventHandler;
         }
 
+        public bool Login(UserDto user)
+        {
+            if (user == null)
+            {
+                return false;
+            }
+
+            // TODO: добавить потом проверку пароля
+            return UserService.GetUserByLogin(user.Login) != null;
+        }
+
         private void NetEventPoll_ServerEventHandler(object sender, PacketId packetId)
         {
             var netEvent = (Event)sender;
@@ -24,19 +38,23 @@ namespace VowelAServer.Server.Authorization
 
             if (packetId == PacketId.LoginRequest)
             {
-                var data = Protocol.SerializeData((byte) PacketId.LoginResponse, playerId);
+                var readBuffer = new byte[netEvent.Packet.Length];
+                netEvent.Packet.CopyTo(readBuffer);
+
+                var protocol = new Protocol();
+                protocol.Deserialize(readBuffer, out var code, out var userStr);
+
+                var user = JsonConvert.DeserializeObject<UserDto>(userStr);
+
+                var isLogedIn = Login(user);
+
+                var data = Protocol.SerializeData((byte) PacketId.LoginResponse, Convert.ToUInt32(isLogedIn));
                 NetController.SendData(data, ref netEvent);
 
-                data = Protocol.SerializeData((byte)PacketId.LoginEvent, playerId);
-                NetController.SendData(data);
-                /* TODO: IS IT NECESSARY ??
-                foreach (var player in players)
+                if (isLogedIn)
                 {
-                    data = Protocol.SerializeData((byte)PacketId.LoginEvent, playerId);
-                    NetController.SendData(data, ref netEvent);
+                    players.Add(new Player(playerId));
                 }
-                */
-                players.Add(new Player(playerId));
             }
             else if (packetId == PacketId.LogoutEvent)
             {

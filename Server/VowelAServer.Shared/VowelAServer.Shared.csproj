@@ -14,13 +14,10 @@
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MacOS|AnyCPU' ">
-    <IntermediateOutputPath>obj\MacOS</IntermediateOutputPath>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType></DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\MacOS</OutputPath>
-    <DefineConstants></DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MacOS|AnyCPU' ">
     <CustomCommands>
       <CustomCommands>
         <Command>
@@ -29,8 +26,7 @@
         </Command>
       </CustomCommands>
     </CustomCommands>
-    <NoWarn></NoWarn>
-    <NoStdLib>false</NoStdLib>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Data\Math\" />

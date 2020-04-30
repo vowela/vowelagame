@@ -17,10 +17,7 @@ namespace VowelAServer.Gameplay.Controllers
         {
             get
             {
-                if (string.IsNullOrEmpty(sceneDataPath))
-                {
-                    sceneDataPath = Utils.GetDirPath("Storage") + @"/scene_file.json";
-                }
+                if (string.IsNullOrEmpty(sceneDataPath)) sceneDataPath = Utils.GetDirPath("Storage") + @"/scene_file.json";
 
                 return sceneDataPath;
             }
@@ -53,24 +50,24 @@ namespace VowelAServer.Gameplay.Controllers
                 new ContainerData
                 {
                     ContainerName = "Test Name 1",
-                    LuaCode = @"--This is test lua code
+                    ClientLuaCode = @"--This is test lua code
                     function Update() return 'Ya siel deda' end",
                     Id = child0
                 },
                 new ContainerData() {
                     ContainerName = "Test Name 2",
-                    LuaCode = "--This is test lua code",
+                    ClientLuaCode = "--This is test lua code",
                     Id = child1
                 },
                 new ContainerData() {
                     ContainerName = "Test Name 3",
-                    LuaCode = "--This is test lua code",
+                    ClientLuaCode = "--This is test lua code",
                     Id = child2,
                     ParentId = child0
                 },
                 new ContainerData() {
                     ContainerName = "Test Name 4",
-                    LuaCode = "--This is test lua code",
+                    ClientLuaCode = "--This is test lua code",
                     Id = child3,
                     ParentId = child2
                 }

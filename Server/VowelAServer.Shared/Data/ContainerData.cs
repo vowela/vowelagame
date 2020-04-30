@@ -8,7 +8,8 @@ namespace VowelAServer.Shared.Data
     {
         public string Id              = Guid.NewGuid().ToString();
         public string ContainerName   = "";
-        public string LuaCode         = "";
+        public string ClientLuaCode   = "";
+        public string ServerLuaCode   = "";
         public string ParentId        = "";
         public Vector Position        = new Vector();
         public Vector Size            = new Vector();

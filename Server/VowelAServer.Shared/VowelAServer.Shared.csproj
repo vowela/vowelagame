@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release;MacOS</Configurations>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -28,9 +30,4 @@
     </CustomCommands>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Data\Math\" />
-    <Folder Include="Data\Multiplayer\" />
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
 </Project>

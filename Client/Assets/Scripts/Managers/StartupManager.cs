@@ -15,7 +15,7 @@ public class StartupManager : MonoBehaviour
 
     void Update() 
     {
-        if (!IsSceneLoaded && AuthController.Authorized)
+        if (!IsSceneLoaded && ConnectionManager.IsConnected)
         {
             // Start attempt to connect to server
             // Download a scene file

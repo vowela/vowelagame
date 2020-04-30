@@ -9,14 +9,15 @@ using VowelAServer.Shared.Data.Multiplayer;
 
 public class ConnectionManager : MonoBehaviour
 {
+    public static bool IsConnected;
     public static event EventHandler<PacketId> ClientEventHandler;
     public static Peer CurrentPeer;
     public static Host Client;
     public string Ip = "127.0.0.1";
     public ushort Port = 6005;
     public Address Address;
+    
     private int skipFrame = 0;
-
     private bool tryConnect = true;
 
     void Awake ()
@@ -30,8 +31,7 @@ public class ConnectionManager : MonoBehaviour
     {
         UpdateENet();
 
-        if (++skipFrame < 3)
-            return;
+        if (++skipFrame < 3) return;
 
         skipFrame = 0;
     }
@@ -39,12 +39,12 @@ public class ConnectionManager : MonoBehaviour
     void OnDestroy()
     {
         Client.Dispose();
-        ENet.Library.Deinitialize();
+        Library.Deinitialize();
     }
 
     private void InitENet()
     {
-        ENet.Library.Initialize();
+        Library.Initialize();
         Client = new Host();
         Address = new Address();
 
@@ -62,38 +62,25 @@ public class ConnectionManager : MonoBehaviour
         ENet.Event netEvent;
 
         if (Client.CheckEvents(out netEvent) <= 0)
-        {
-            if (Client.Service(0, out netEvent) <= 0)
-                return;
-        }
+            if (Client.Service(0, out netEvent) <= 0) return;
 
         var packetId = PacketId.None;
         switch (netEvent.Type)
         {
             case ENet.EventType.None:
                 break;
-
             case ENet.EventType.Connect:
                 Debug.Log("Client connected to server - ID: " + CurrentPeer.ID);
-                Debug.Log("SendLogin");
-                var data = Protocol.SerializeData((byte)PacketId.LoginRequest, 0);
-                NetController.SendData(data);
-                
-                AuthController.Authorized = true;
+                IsConnected = true;
                 break;
-
             case ENet.EventType.Disconnect:
                 Debug.Log("Client disconnected from server");
-
                 Connect();
                 break;
-
             case ENet.EventType.Timeout:
                 Debug.Log("Client connection timeout");
-
                 Connect();
                 break;
-
             case ENet.EventType.Receive:
                 Debug.Log("Packet received from server - Channel ID: " + netEvent.ChannelID + ", Data length: " + netEvent.Packet.Length);
                 
@@ -109,16 +96,13 @@ public class ConnectionManager : MonoBehaviour
                 break;
         }
 
-        if (packetId != PacketId.None)
-            ClientEventHandler?.Invoke(netEvent, packetId);
+        if (packetId != PacketId.None) ClientEventHandler?.Invoke(netEvent, packetId);
 
-        if (netEvent.Type == ENet.EventType.Receive)
-            netEvent.Packet.Dispose();
+        if (netEvent.Type == ENet.EventType.Receive) netEvent.Packet.Dispose();
     }
 
     private void Connect() {
-        if (!tryConnect)
-            return;
+        if (!tryConnect) return;
 
         CurrentPeer = Client.Connect(Address);
     }

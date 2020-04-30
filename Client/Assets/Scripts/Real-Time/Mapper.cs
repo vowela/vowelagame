@@ -15,10 +15,8 @@ public class Player {
 public class PlayerController {
     public static Vector GetPosition() {
         if (Player.PlayerObject == null) return new Vector();
-        else {
-            var pos = Player.PlayerObject.transform.position + Player.PlayerObject.transform.forward;
-            return new Vector(pos.x, pos.y, pos.z);
-        }
+        var pos = Player.PlayerObject.transform.position + Player.PlayerObject.transform.forward;
+        return new Vector(pos.x, pos.y, pos.z);
     }
 }
 

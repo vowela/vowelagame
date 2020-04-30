@@ -23,7 +23,7 @@ public class ContextMenuManager : MonoBehaviour
             if (contextMenuInstance != null)
                 contextMenuInstance.GetComponent<ContextMenu>().HideMenu();
         } else if (Input.GetMouseButtonDown(1)) {
-            if (!AuthController.Authorized) return;
+            if (!ConnectionManager.IsConnected) return;
 
             if (contextMenuInstance == null)
                 contextMenuInstance = Instantiate(ContextMenuPrefab, Vector3.zero, Quaternion.identity, UIManager.Instance.CanvasUI.transform);

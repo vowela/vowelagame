@@ -22,10 +22,7 @@ namespace VowelAServer.Server.Authorization
 
         public bool Login(UserDto user)
         {
-            if (user == null)
-            {
-                return false;
-            }
+            if (user == null) return false;
 
             // TODO: добавить потом проверку пароля
             return UserService.GetUserByLogin(user.Login) != null;
@@ -35,8 +32,8 @@ namespace VowelAServer.Server.Authorization
         {
             var netEvent = (Event)sender;
             var playerId = netEvent.Peer.ID;
-
-            if (packetId == PacketId.LoginRequest)
+            
+            /*if (packetId == PacketId.ConnectionRequest)
             {
                 var readBuffer = new byte[netEvent.Packet.Length];
                 netEvent.Packet.CopyTo(readBuffer);
@@ -48,24 +45,20 @@ namespace VowelAServer.Server.Authorization
 
                 var isLogedIn = Login(user);
 
-                var data = Protocol.SerializeData((byte) PacketId.LoginResponse, Convert.ToUInt32(isLogedIn));
-                NetController.SendData(data, ref netEvent);
+                //var data = Protocol.SerializeData((byte) PacketId.LoginResponse, Convert.ToUInt32(isLogedIn));
+                //NetController.SendData(data, ref netEvent);
 
-                if (isLogedIn)
-                {
-                    players.Add(new Player(playerId));
-                }
+                if (isLogedIn) players.Add(new Player(playerId));
             }
-            else if (packetId == PacketId.LogoutEvent)
+            else if (packetId == PacketId.PlayerDisconnectEvent)
             {
                 var player = new Player(playerId);
-                if (!players.Contains(player))
-                    return;
+                if (!players.Contains(player)) return;
 
                 players.Remove(player);
-                var data = Protocol.SerializeData((byte)PacketId.LogoutEvent, playerId);
+                var data = Protocol.SerializeData((byte)PacketId.PlayerDisconnectEvent, playerId);
                 NetController.SendData(data);
-            }
+            }*/
         }
     }
 }

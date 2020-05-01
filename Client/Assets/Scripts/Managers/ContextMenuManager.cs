@@ -5,6 +5,8 @@ using Server;
 using UnityEngine;
 using VowelAServer.Shared.Data;
 using VowelAServer.Shared.Data.Multiplayer;
+using VowelAGame;
+using ContextMenu = VowelAGame.ContextMenu;
 
 public class ContextMenuManager : MonoBehaviour
 {

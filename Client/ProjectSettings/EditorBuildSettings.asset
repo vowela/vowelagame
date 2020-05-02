@@ -5,11 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
-    path: Assets/Third-Party/Enviro - Sky and Weather/Samples/Scene/Enviro - Sample
-      Scene.unity
-    guid: 5b4cb650e8336ca438c343a14cd22417
   m_configObjects: {}

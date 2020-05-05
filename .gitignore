@@ -6,7 +6,6 @@
 # bins
 *.exe
 *.pdb
-*.pdf
 *.obj
 *.mdb
 .DS_Store

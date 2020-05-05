@@ -35,14 +35,14 @@ namespace OC.ExampleContent
 		[SerializeField]
 		Text					m_FPSText			 = null;
 
-		[SerializeField]
-		ReflectionProbe			m_DynamicReflectionProbe  = null;
+		//[SerializeField]
+		//ReflectionProbe			m_DynamicReflectionProbe  = null;
 
 		[SerializeField]
 		OverCloudProbe			m_CloudProbe		 = null;
 
-		[SerializeField]
-		AudioLowPassFilter		m_PropellerFilter	 = null;
+		//[SerializeField]
+		//AudioLowPassFilter		m_PropellerFilter	 = null;
 
 		string					m_CachedString;
 		int						m_CloudQuality = 2;
@@ -124,10 +124,10 @@ namespace OC.ExampleContent
 			}
 
 			// Toggle dynamic reflection probe
-			if (Input.GetKeyDown("r"))
-			{
-				m_DynamicReflectionProbe.enabled	= !m_DynamicReflectionProbe.enabled;
-			}
+			//if (Input.GetKeyDown("r"))
+			//{
+			//	m_DynamicReflectionProbe.enabled	= !m_DynamicReflectionProbe.enabled;
+			//}
 
 			#if POST_PROCESSING_STACK_V1
 			// Toggle post processing
@@ -141,7 +141,7 @@ namespace OC.ExampleContent
 			#endif
 
 			// Apply a low pass filter to the propeller when inside the clouds
-			m_PropellerFilter.cutoffFrequency = Mathf.Lerp(22000, 800, m_CloudProbe.density);
+			//m_PropellerFilter.cutoffFrequency = Mathf.Lerp(22000, 800, m_CloudProbe.density);
 
 			// Change time of day
 			float scroll = Input.GetAxis("Mouse ScrollWheel");

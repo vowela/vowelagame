@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: OverCloudMain
   m_Shader: {fileID: 4800000, guid: c8003dd98bff5844abe311b57a41d0aa, type: 3}
-  m_ShaderKeywords: AMBIENT_GRADIENT CUSTOM_AMBIENT HQ_LIGHT_SAMPLING OVERCLOUD_ATMOSPHERE_ENABLED
+  m_ShaderKeywords: AMBIENT_GRADIENT CUSTOM_AMBIENT OVERCLOUD_ATMOSPHERE_ENABLED
     SAMPLE_COUNT_NORMAL
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

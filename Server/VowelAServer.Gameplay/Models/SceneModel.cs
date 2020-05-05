@@ -7,5 +7,7 @@ namespace VowelAServer.Gameplay.Models
     public class SceneModel
     {
         public HashSet<ContainerData> SceneData;
+        public HashSet<ContainerArea> ContainerAreas;
+        public Dictionary<string, string> ContainerAreaNames;
     }
 }

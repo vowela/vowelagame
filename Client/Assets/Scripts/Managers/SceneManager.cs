@@ -33,15 +33,12 @@ public class SceneManager : MonoBehaviour
 
     private void NetEventPoll_ServerEventHandler(object sender, PacketId packetId){
         var netEvent = (ENet.Event) sender;
-        
-        if (packetId == PacketId.SceneDataResponse) {
-            // Parse scene file
+        if (packetId == PacketId.ObjectChangesEvent) {
             var sceneData = DeserializeSceneData(netEvent);
             if (sceneData != null) UpdateScene(sceneData);
-
-            StartupManager.IsSceneLoaded = true;
-        } else if (packetId == PacketId.ObjectChangesEvent) {
+        } else if (packetId == PacketId.AreaResponse) {
             var sceneData = DeserializeSceneData(netEvent);
+            // Destroy everything on currect area
             if (sceneData != null) UpdateScene(sceneData);
         }
     }

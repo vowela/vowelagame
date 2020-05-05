@@ -7,21 +7,15 @@ namespace VowelAServer.Shared.Data
     public class ContainerData : IEquatable<ContainerData>
     {
         public string Id              = Guid.NewGuid().ToString();
+        public string AreaId          = Guid.NewGuid().ToString();
         public string ContainerName   = "";
         public string ClientLuaCode   = "";
         public string ServerLuaCode   = "";
         public string ParentId        = "";
-        public Vector Position        = new Vector();
+        public Point Position         = new Point();
         public Vector Size            = new Vector();
 
-        public bool Equals(ContainerData other)
-        {
-            return other != null && other.Id.Equals(Id);
-        }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
+        public bool Equals(ContainerData other) => other != null && other.Id.Equals(Id);
+        public override int GetHashCode() => Id.GetHashCode();
     }
 }

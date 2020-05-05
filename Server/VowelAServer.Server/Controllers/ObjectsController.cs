@@ -30,12 +30,17 @@ namespace VowelAServer.Server.Controllers
                 var containerObject = JsonConvert.DeserializeObject<ContainerData>(containerJson);
                 if (containerObject != null)
                 {
-                    WorldObjectController.CreateObject(containerObject);
-
-                    //var data = Protocol.SerializeData((byte)PacketId.MenuResponse, json);
-                    //NetController.SendData(data);
+                    var sceneChanges = WorldObjectController.CreateObject(containerObject);
+                    SendSceneChanges(sceneChanges); //TODO: make sending only for users in that area
                 }
             }
+        }
+        
+        public static void SendSceneChanges(SceneData sceneChanges)
+        {
+            var json = JsonConvert.SerializeObject(sceneChanges);
+            var data = Protocol.SerializeData((byte)PacketId.ObjectChangesEvent, json);
+            NetController.SendData(data);
         }
     }
 }

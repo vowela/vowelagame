@@ -10,18 +10,14 @@ using VowelAServer.Shared.Data.Multiplayer;
 
 public class StartupManager : MonoBehaviour
 {
-    public static bool IsSceneLoaded;
-    
-
-    void Update() 
+    void Start() 
     {
-        if (!IsSceneLoaded && ConnectionManager.IsConnected)
+        /*if (ConnectionManager.IsConnected)
         {
-            // Start attempt to connect to server
-            // Download a scene file
-            var data = Protocol.SerializeData((byte)PacketId.SceneDataRequest, 0);
+            // Download authoritative place
+            var data = Protocol.SerializeData((byte)PacketId.ObjectChangesRequest, 0);
             NetController.SendData(data);
             IsSceneLoaded = true;
-        }
+        }*/
     }
 }

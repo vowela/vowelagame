@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ENet;
 using Newtonsoft.Json;
 using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Models;
@@ -14,7 +15,7 @@ namespace VowelAServer.Server.Controllers
         public static bool HasObject(string id) =>
             WorldSimulation.Instance.SceneController.Scene.SceneData.Contains(new ContainerData { Id = id });
 
-        public static void CreateObject(ContainerData container)
+        public static SceneData CreateObject(ContainerData container)
         {
             if (!string.IsNullOrEmpty(container.Id) &&
                 HasObject(container.Id))
@@ -23,6 +24,8 @@ namespace VowelAServer.Server.Controllers
             }
             else
             {
+                // Check if requested area for an object is available
+                if (string.IsNullOrEmpty(container.AreaId) || !WorldAreaController.HasArea(container.AreaId)) return new SceneData();
                 // Create new object
                 if (string.IsNullOrEmpty(container.Id)) container.Id = Guid.NewGuid().ToString();
                 container.ClientLuaCode = @"function OnStart() CreatePrimitive(0) end";
@@ -32,11 +35,12 @@ namespace VowelAServer.Server.Controllers
                 {
                     Added = new HashSet<ContainerData> { container }
                 };
-                SendSceneChanges(sceneChanges);
+                return sceneChanges;
             }
+            return new SceneData();
         }
 
-        public static void ChangeObject(ContainerData container)
+        public static SceneData ChangeObject(ContainerData container)
         {
             if (!string.IsNullOrEmpty(container.Id) &&
                 HasObject(container.Id))
@@ -48,20 +52,14 @@ namespace VowelAServer.Server.Controllers
                     {
                         Changed = new HashSet<ContainerData> { container }
                     };
-                    SendSceneChanges(sceneChanges);
+                    return sceneChanges;
                 }
             }
             else
             {
                 // Nothing found
             }
-        }
-
-        private static void SendSceneChanges(SceneData sceneChanges)
-        {
-            var json = JsonConvert.SerializeObject(sceneChanges);
-            var data = Protocol.SerializeData((byte)PacketId.ObjectChangesEvent, json);
-            NetController.SendData(data);
+            return new SceneData();
         }
     }
 }

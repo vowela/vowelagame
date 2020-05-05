@@ -5,11 +5,11 @@ namespace VowelAServer.Shared.Data.Multiplayer
     {
         None                  = 0,
         PlayerDisconnectEvent = 1,
-        SceneDataRequest      = 2,
-        SceneDataResponse     = 3,
-        MenuRequest           = 4,
-        MenuResponse          = 5,
-        ObjectChangesRequest  = 6,
-        ObjectChangesEvent    = 7
+        MenuRequest           = 2,
+        MenuResponse          = 3,
+        ObjectChangesRequest  = 4,
+        ObjectChangesEvent    = 5,
+        AreaRequest           = 6,
+        AreaResponse          = 7
     }
 }

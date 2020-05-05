@@ -34,6 +34,8 @@ public class Mapper
     public void InitMapping(RealTimeCompiler compiler) {
         var scriptObject = compiler.ScriptObject;
 
+        UserData.RegisterType<Point>();
+        scriptObject.Globals["Point"]           = typeof(Point);
         UserData.RegisterType<Vector>();
         scriptObject.Globals["Vector"]          = typeof(Vector);
         UserData.RegisterType<PlayerController>();
@@ -43,7 +45,7 @@ public class Mapper
 
         if (compiler.Container != null)
             scriptObject.Globals["This"]        = compiler.Container.GetData();
-        scriptObject.Globals["CreateObject"]    = (Action<Vector>) CreateObject;
+        scriptObject.Globals["CreateObject"]    = (Action<Point>) CreateObject;
         scriptObject.Globals["CreatePrimitive"] = (Action<uint>) ((uint primType) => CreatePrimitive(compiler.Container, primType));
         scriptObject.Globals["EditLogic"]       = (Action) EditLogic;
         scriptObject.Globals["Log"]             = (Action<string>) ((str) => Debug.Log(str));
@@ -59,7 +61,7 @@ public class Mapper
         newPrimitive.transform.localPosition = Vector3.zero;
     }
 
-    private void CreateObject(Vector position) {
+    private void CreateObject(Point position) {
         byte[] data;
         var newObject = new ContainerData {
             Position = position,

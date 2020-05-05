@@ -27,7 +27,11 @@ namespace VowelAServer.Gameplay.Controllers
         {
             if (!File.Exists(SceneDataPath))
             {
-                Scene = new SceneModel { SceneData = new HashSet<ContainerData>() };
+                Scene = new SceneModel {
+                    SceneData          = new HashSet<ContainerData>(), 
+                    ContainerAreas     = new HashSet<ContainerArea>(),
+                    ContainerAreaNames = new Dictionary<string, string>()
+                };
                 return;
             }
             var openFile = JsonConvert.DeserializeObject<SceneModel>(File.ReadAllText(SceneDataPath));
@@ -37,41 +41,6 @@ namespace VowelAServer.Gameplay.Controllers
         public void SaveSceneData()
         {
             File.WriteAllText(SceneDataPath, JsonConvert.SerializeObject(Scene));
-        }
-
-        private List<ContainerData> CreateTestScene()
-        {
-            var child0 = Guid.NewGuid().ToString();
-            var child1 = Guid.NewGuid().ToString();
-            var child2 = Guid.NewGuid().ToString();
-            var child3 = Guid.NewGuid().ToString();
-            return new List<ContainerData>()
-            {
-                new ContainerData
-                {
-                    ContainerName = "Test Name 1",
-                    ClientLuaCode = @"--This is test lua code
-                    function Update() return 'Ya siel deda' end",
-                    Id = child0
-                },
-                new ContainerData() {
-                    ContainerName = "Test Name 2",
-                    ClientLuaCode = "--This is test lua code",
-                    Id = child1
-                },
-                new ContainerData() {
-                    ContainerName = "Test Name 3",
-                    ClientLuaCode = "--This is test lua code",
-                    Id = child2,
-                    ParentId = child0
-                },
-                new ContainerData() {
-                    ContainerName = "Test Name 4",
-                    ClientLuaCode = "--This is test lua code",
-                    Id = child3,
-                    ParentId = child2
-                }
-            };
         }
     }
 }

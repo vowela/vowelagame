@@ -13,6 +13,8 @@ using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Controllers;
 using VowelAServer.Shared.Data;
 using VowelAServer.Shared.Data.Math;
+using VowelAServer.Server.Utils;
+using VowelAServer.Shared.Data.Enums;
 
 namespace VowelAServer.Server.Authorization
 {
@@ -49,12 +51,31 @@ namespace VowelAServer.Server.Authorization
             }
         }
 
-        public bool Login(UserDto user)
+        public bool Login(UserDto dto)
         {
+            if (dto == null) return false;
+
+            var user = UserService.GetUserByLogin(dto.Login);
             if (user == null) return false;
 
-            // TODO: добавить потом проверку пароля
-            return UserService.GetUserByLogin(user.Login) != null;
+            return PasswordHasher.VerifyPassword(dto.Password, user.HashedPassword, user.Salt);
+        }
+
+        public bool Register(UserDto user)
+        {
+            byte[] hashedPassword, salt;
+
+            PasswordHasher.CreateHash(user.Password, out hashedPassword, out salt);
+
+            var userToAdd = new User()
+            {
+                Login = user.Login,
+                HashedPassword = hashedPassword,
+                Salt = salt,
+                Roles = Roles.User,
+            };
+
+            return UserService.CreateUser(userToAdd);
         }
 
         private void NetEventPoll_ServerEventHandler(object sender, PacketId packetId)

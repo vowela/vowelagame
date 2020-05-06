@@ -8,7 +8,7 @@ namespace VowelAServer.Db.Services
 {
     public class UserService
     {
-        public static void CreateUser(User user)
+        public static bool CreateUser(User user)
         {
             using (var db = new LiteDatabase(DbContext.DbPath))
             {
@@ -18,9 +18,11 @@ namespace VowelAServer.Db.Services
 
                 var addedUser = users.FindOne(x => x.Login == user.Login);
 
-                if (addedUser != null) return;
+                if (addedUser != null) return false;
 
                 users.Insert(user);
+
+                return true;
             }
         }
 

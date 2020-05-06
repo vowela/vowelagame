@@ -9,7 +9,9 @@ namespace VowelAServer.Server.Models
     {
         public string Login { get; set; }
 
-        public string HashedPassword { get; set; }
+        public byte[] HashedPassword { get; set; }
+
+        public byte[] Salt { get; set; }
 
         public Roles Roles { get; set; }
     }

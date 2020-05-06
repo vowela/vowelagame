@@ -10,12 +10,20 @@ using ContextMenu = VowelAGame.ContextMenu;
 
 public class ContextMenuManager : MonoBehaviour
 {
+    public static ContextMenuManager Instance;
+
+    public Container HitContainer;
     public LayerMask ObjectsMask;
     public GameObject ContextMenuPrefab;
 
     private GameObject contextMenuInstance;
     private ContextMenu contextMenu;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+    
     private void Start() {
         ConnectionManager.ClientEventHandler += NetEventPoll_ServerEventHandler;
     }
@@ -23,7 +31,10 @@ public class ContextMenuManager : MonoBehaviour
     private void Update() {
         if (Input.GetMouseButtonUp(0)) {
             if (contextMenuInstance != null)
+            {
                 contextMenuInstance.GetComponent<ContextMenu>().HideMenu();
+                HitContainer = null;
+            }
         } else if (Input.GetMouseButtonDown(1)) {
             if (!ConnectionManager.IsConnected) return;
 
@@ -37,10 +48,12 @@ public class ContextMenuManager : MonoBehaviour
             if (Physics.Raycast(ray, out var hit, 100.0f, ObjectsMask)) {
                 // Object scripting
                 data = Protocol.SerializeData((byte)PacketId.MenuRequest, "object");
+                HitContainer = hit.transform.GetComponentInParent<Container>();
             } else {
                 // World space scripting
                 // Call Server to fetch context menu data
                 data = Protocol.SerializeData((byte)PacketId.MenuRequest, "context");
+                HitContainer = null;
             }
             NetController.SendData(data);
         }

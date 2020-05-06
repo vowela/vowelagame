@@ -68,6 +68,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: cc00b7a428afd6a4bb470014b4f75320,
         type: 2}
+    - target: {fileID: 114104653646104232, guid: 79a74f96889fc1c429f043e7fa8caf72,
+        type: 3}
+      propertyPath: applyLineOffsetFix
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114241622988555006, guid: 79a74f96889fc1c429f043e7fa8caf72,
         type: 3}
       propertyPath: m_havePropertiesChanged
@@ -176,7 +181,7 @@ PrefabInstance:
     - target: {fileID: 114794710919643074, guid: 79a74f96889fc1c429f043e7fa8caf72,
         type: 3}
       propertyPath: m_Value
-      value: 0.0019603886
+      value: 0.0020135713
       objectReference: {fileID: 0}
     - target: {fileID: 114979364068399606, guid: 79a74f96889fc1c429f043e7fa8caf72,
         type: 3}

@@ -8,12 +8,16 @@ using VowelAServer.Shared.Data.Multiplayer;
 
 public class SceneManager : MonoBehaviour
 {
+    public LayerMask InteractLayer;
+    public static SceneManager Instance;
     public static Dictionary<string, Container> ObjectsTree = new Dictionary<string, Container>();
 
     private const string RootName = "Root";
     private GameObject root;
 
-    void Awake() {
+    void Awake()
+    {
+        Instance = this;
         // Pre-Init Scene
         root = new GameObject(RootName);
 

@@ -28,7 +28,7 @@ namespace VowelAServer.Server.Controllers
                 if (string.IsNullOrEmpty(container.AreaId) || !WorldAreaController.HasArea(container.AreaId)) return new SceneData();
                 // Create new object
                 if (string.IsNullOrEmpty(container.Id)) container.Id = Guid.NewGuid().ToString();
-                container.ClientLuaCode = @"function OnStart() CreatePrimitive(0) end";
+                container.ClientLuaCode = @"function OnStart() CreatePrimitive(0, true) end";
                 WorldSimulation.Instance.SceneController.Scene.SceneData.Add(container);
 
                 var sceneChanges = new SceneData()

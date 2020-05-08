@@ -22,7 +22,7 @@ namespace VowelAServer.Gameplay.Controllers
         public WorldSimulation()
         {
             Instance = this;
-            WorldTime.Instance().GetWorldTime();
+            WorldTime.Instance().Start(WorldTime.GetSavedTime());
             InitScene();
         }
 
@@ -35,7 +35,10 @@ namespace VowelAServer.Gameplay.Controllers
             if (WorldTime.Instance().GetWorldTime() > lastSavedTime + timeToSave)
             {
                 Console.WriteLine("Save the server data..");
+
                 SceneController.SaveSceneData();
+                WorldTime.Instance().SaveTime();
+
                 lastSavedTime = WorldTime.Instance().GetWorldTime();
             }
         }

@@ -54,36 +54,18 @@ namespace VowelAServer.Gameplay.Controllers
             stopwatch.Start();
         }
 
-        public DateTime GetCurrentTime()
-        {
-            return startTime.AddMilliseconds(stopwatch.ElapsedMilliseconds);
-        }
+        public DateTime GetCurrentTime() => startTime.AddMilliseconds(stopwatch.ElapsedMilliseconds);
 
         // Milliseconds
-        public float GetWorldTime()
-        {
-            return stopwatch.ElapsedMilliseconds;
-        }
+        public float GetWorldTime() => stopwatch.ElapsedMilliseconds;
 
-        public float GetWorldTimeSeconds()
-        {
-            return GetWorldTime() / 1000;
-        }
+        public float GetWorldTimeSeconds() => GetWorldTime() / 1000;
 
-        public float GetWorldTimeMinutes()
-        {
-            return GetWorldTimeSeconds() / 60;
-        }
+        public float GetWorldTimeMinutes() => GetWorldTimeSeconds() / 60;
 
-        public float GetWorldTimeHours()
-        {
-            return GetWorldTimeMinutes() / 60;
-        }
+        public float GetWorldTimeHours() => GetWorldTimeMinutes() / 60;
 
-        public float GetWorldTimeDays()
-        {
-            return GetWorldTimeHours() / 24;
-        }
+        public float GetWorldTimeDays() => GetWorldTimeHours() / 24;
 
         public void SaveTime()
         {

@@ -19,18 +19,19 @@ namespace VowelAServer.Server.Controllers
         private void NetEventPoll_ServerEventHandler(object sender, PacketId packetId)
         {
             var senderEvent = (Event)sender;
-            if (packetId == PacketId.SceneDataRequest)
-            {
-                Console.WriteLine("Requested scene data");
-                if (WorldSimulation.Instance != null) {
-                    var sceneChanges = new SceneData()
-                    {
-                        Added = WorldSimulation.Instance.Scene
-                    };
-                    var json = JsonConvert.SerializeObject(sceneChanges);
-                    var data = Protocol.SerializeData((byte)PacketId.SceneDataResponse, json);
-                    NetController.SendData(data, ref senderEvent);
-                }
+           // RequestFullSceneData();
+        }
+
+        private void RequestFullSceneData()
+        {
+            if (WorldSimulation.Instance != null) {
+                var sceneChanges = new SceneData()
+                {
+                    Added = WorldSimulation.Instance.SceneController.Scene.SceneData
+                };
+                var json = JsonConvert.SerializeObject(sceneChanges);
+                var data = Protocol.SerializeData((byte)PacketId.ObjectChangesEvent, json);
+                //NetController.SendData(data, ref senderEvent);
             }
         }
     }

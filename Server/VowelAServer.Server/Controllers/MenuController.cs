@@ -59,12 +59,12 @@ namespace VowelAServer.Server.Controllers
                 ButtonData = new List<MenuButtonData>()
                 {
                     new MenuButtonData {
-                        ButtonText = "Child Object",
-                        LuaCode = "function OnClick() CreateObject(Player.GetPosition()) end"
+                        ButtonText = "Edit Client Logic",
+                        LuaCode = "function OnClick() EditLogic(false, HitContainer.GetData()) end"
                     },
                     new MenuButtonData {
-                        ButtonText = "Edit Logic",
-                        LuaCode = "function OnClick() EditLogic() end"
+                        ButtonText = "Edit Server Logic",
+                        LuaCode = "function OnClick() EditLogic(true, HitContainer.GetData()) end"
                     }
                 }
             };

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using ENet;
 using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Authorization;
@@ -17,6 +16,7 @@ namespace VowelAServer.Server
         public static AuthController AuthController;
         public static LuaController LuaController;
         public static MenuController MenuController;
+        public static ObjectsController ObjectsController;
 
         private static void InitTickables()
         {
@@ -28,9 +28,10 @@ namespace VowelAServer.Server
 
         private static void InitControllers()
         {
-            AuthController = new AuthController();
-            LuaController  = new LuaController();
-            MenuController = new MenuController();
+            AuthController    = new AuthController();
+            LuaController     = new LuaController();
+            MenuController    = new MenuController();
+            ObjectsController = new ObjectsController();
         }
 
         static void Main(string[] args)

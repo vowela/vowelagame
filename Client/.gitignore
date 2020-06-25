@@ -1,5 +1,5 @@
 # VowelA specific ignore
-/Assets/Shared/*
+/Assets/Shared/*.dll
 /.vs
 
 # Unity ECS

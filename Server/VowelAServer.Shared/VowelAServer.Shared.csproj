@@ -1,7 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release;MacOS</Configurations>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -14,13 +16,10 @@
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MacOS|AnyCPU' ">
-    <IntermediateOutputPath>obj\MacOS</IntermediateOutputPath>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType></DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\MacOS</OutputPath>
-    <DefineConstants></DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MacOS|AnyCPU' ">
     <CustomCommands>
       <CustomCommands>
         <Command>
@@ -29,13 +28,6 @@
         </Command>
       </CustomCommands>
     </CustomCommands>
-    <NoWarn></NoWarn>
-    <NoStdLib>false</NoStdLib>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Data\Math\" />
-    <Folder Include="Data\Multiplayer\" />
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
 </Project>

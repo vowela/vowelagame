@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &570718713
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 570718715}
+  - component: {fileID: 570718714}
+  m_Layer: 0
+  m_Name: Cloud Probe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &570718715
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570718713}
+  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.1, y: 2999.3596, z: 9.22}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5922197366011538859}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &570718714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570718713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a790424ca882b624aaaed4bf64ea999e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interpolationSpeed: 1
+  m_Debug: 0
 --- !u!1 &5922197366011538858
 GameObject:
   m_ObjectHideFlags: 0
@@ -32,6 +77,7 @@ Transform:
   - {fileID: 5922197366077802331}
   - {fileID: 5922197367646141345}
   - {fileID: 5922197366200287706}
+  - {fileID: 570718715}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -87,6 +133,9 @@ GameObject:
   - component: {fileID: 5922197366077802325}
   - component: {fileID: 5922197366077802324}
   - component: {fileID: 5922197366077802326}
+  - component: {fileID: 1081883323}
+  - component: {fileID: 1081883324}
+  - component: {fileID: 1081883325}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -132,7 +181,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 60000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -172,6 +221,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerBody: {fileID: 5922197366011538859}
+--- !u!114 &1081883323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922197366077802330}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe1fdc179eb5bc043a5526d5eb8d57d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: 4b6010984f0f0bc4581fd0d693a62876, type: 3}
+  exposure: 1.46
+  gamma: 5
+--- !u!114 &1081883324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922197366077802330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15e8fc05344791f49885c0e5c06f01f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  downsampleFactor: 2
+  renderVolumetricClouds: 1
+  render2DFallback: 1
+  lightSampleCount: 1
+  highQualityClouds: 0
+  downsample2DClouds: 0
+  renderAtmosphere: 1
+  renderScatteringMask: 1
+  includeCascadedShadows: 1
+  scatteringMaskSamples: 1
+  renderRainMask: 0
+--- !u!114 &1081883325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922197366077802330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c5362ca1be6df344b124cca462ac347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overCloudProbe: {fileID: 570718714}
+  shader: {fileID: 4800000, guid: e2b6d9c8013db9d48b2466130885fd1a, type: 3}
+  blurShader: {fileID: 4800000, guid: 2bc7e0f38d381a54b84e0b284ab5cda0, type: 3}
+  blurAmount: 2
+  blurMask: {fileID: 2800000, guid: d6abe756f867993418f44520642f6a5a, type: 3}
 --- !u!1 &5922197366200287705
 GameObject:
   m_ObjectHideFlags: 0

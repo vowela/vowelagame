@@ -32,11 +32,11 @@ namespace VowelAServer.Server.Net
                         break;
                     case EventType.Timeout:
                         Console.WriteLine("Client timeout - ID: " + netEvent.Peer.ID + ", IP: " + netEvent.Peer.IP);
-                        packetId = PacketId.LogoutEvent;
+                        packetId = PacketId.PlayerDisconnectEvent;
                         break;
                     case EventType.Disconnect:
                         Console.WriteLine("Client disconnected - ID: " + netEvent.Peer.ID + ", IP: " + netEvent.Peer.IP);
-                        packetId = PacketId.LogoutEvent;
+                        packetId = PacketId.PlayerDisconnectEvent;
                         break;
                     case EventType.Receive:
                         //Console.WriteLine("Packet received from - ID: " + netEvent.Peer.ID + ", IP: " + netEvent.Peer.IP + ", Channel ID: " + netEvent.ChannelID + ", Data length: " + netEvent.Packet.Length

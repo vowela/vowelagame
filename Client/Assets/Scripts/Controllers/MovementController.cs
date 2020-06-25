@@ -20,6 +20,7 @@ public class MovementController : MonoBehaviour
 
     private void Start() {
         PlayerMesh.SetActive(false);
+        Player.PlayerObject = gameObject;
     }
 
     private void Update() {

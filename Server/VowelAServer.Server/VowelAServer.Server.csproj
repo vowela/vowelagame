@@ -25,7 +25,4 @@
   <ItemGroup>
     <PackageReference Include="ENet-CSharp" Version="2.3.5" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Net\" />
-  </ItemGroup>
 </Project>

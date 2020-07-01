@@ -10,17 +10,16 @@ namespace VowelAServer.Gameplay.Controllers
     {
         private static WorldTime instance;
         private static object syncRoot = new object();
-
         private static string timeDataPath;
-
+        
+        private Stopwatch stopwatch;
+        private DateTime startTime;
+        
         public static string TimeDataPath
         {
             get
             {
-                if (string.IsNullOrEmpty(timeDataPath))
-                {
-                    timeDataPath = Utils.GetDirPath("Storage") + @"/time.json";
-                }
+                if (string.IsNullOrEmpty(timeDataPath)) { timeDataPath = Utils.GetDirPath("Storage") + @"/time.json"; }
 
                 return timeDataPath;
             }
@@ -28,24 +27,15 @@ namespace VowelAServer.Gameplay.Controllers
 
         public static WorldTime Instance()
         {
-            if (instance == null)
+            if (instance != null) return instance;
+            lock (syncRoot)
             {
-                lock (syncRoot)
-                {
-                    if (instance == null) instance = new WorldTime();
-                }
+                instance ??= new WorldTime();
             }
             return instance;
         }
-
-        private Stopwatch stopwatch;
-
-        private DateTime startTime;
-
-        public WorldTime()
-        {
-            stopwatch = new Stopwatch();
-        }
+        
+        public WorldTime() { stopwatch = new Stopwatch(); }
 
         public void Start(DateTime dateTime)
         {
@@ -54,25 +44,22 @@ namespace VowelAServer.Gameplay.Controllers
             stopwatch.Start();
         }
 
-        public DateTime GetCurrentTime() => startTime.AddMilliseconds(stopwatch.ElapsedMilliseconds);
+        public DateTime GetCurrentTime()   => startTime.AddMilliseconds(stopwatch.ElapsedMilliseconds);
 
         // Milliseconds
-        public float GetWorldTime() => stopwatch.ElapsedMilliseconds;
+        public float GetWorldTime()        => stopwatch.ElapsedMilliseconds;
 
         public float GetWorldTimeSeconds() => GetWorldTime() / 1000;
 
         public float GetWorldTimeMinutes() => GetWorldTimeSeconds() / 60;
 
-        public float GetWorldTimeHours() => GetWorldTimeMinutes() / 60;
+        public float GetWorldTimeHours()   => GetWorldTimeMinutes() / 60;
 
-        public float GetWorldTimeDays() => GetWorldTimeHours() / 24;
+        public float GetWorldTimeDays()    => GetWorldTimeHours() / 24;
 
         public void SaveTime()
         {
-            var time = new Time()
-            {
-                Ticks = GetCurrentTime().Ticks,
-            };
+            var time = new Time { Ticks = GetCurrentTime().Ticks };
 
             File.WriteAllText(TimeDataPath, JsonConvert.SerializeObject(time));
         }

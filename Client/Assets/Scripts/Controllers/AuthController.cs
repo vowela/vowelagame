@@ -1,21 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using ENet;
-using Newtonsoft.Json;
-using Server;
+﻿using Newtonsoft.Json;
 using UnityEngine;
-using VowelAServer.Shared.Data.Multiplayer;
 using VowelAServer.Shared.Models.Dtos;
+using VowelAServer.Shared.Networking;
 
 public class AuthController : MonoBehaviour
 {
     private string login;
     private string password;
-
-    void Start()
-    {
-        ConnectionManager.ClientEventHandler += NetEventPoll_ServerEventHandler;
-    }
 
     public void OnLoginChange(string login) => this.login = login;
 
@@ -35,7 +26,7 @@ public class AuthController : MonoBehaviour
         //NetController.SendData(data);
     }
 
-    private void NetEventPoll_ServerEventHandler(object sender, PacketId packetId){
+    private void NetEventPoll_ServerEventHandler(object sender, NetworkEvent packetId){
         var netEvent = (ENet.Event) sender;
         /*if (packetId == PacketId.ObjectChangesEvent) {
             var readBuffer = new byte[netEvent.Packet.Length];

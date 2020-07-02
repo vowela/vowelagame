@@ -11,8 +11,6 @@ namespace VowelAServer.Server.Net
 {
     public static class NetEventPoll
     {
-        public static readonly Dictionary<int, NetController> NetControllers = new Dictionary<int, NetController>();
-        
         public static void CheckPoll()
         {
             var polled = false;
@@ -64,12 +62,10 @@ namespace VowelAServer.Server.Net
         private static void CallRpcMethod(BinaryReader reader)
         {
             // Find needed controller and method
-            var netId = reader.ReadInt32();
-            if (!NetControllers.TryGetValue(netId, out var netController)) return;
-            
+            var targetName = reader.ReadString();
             var methodName = reader.ReadString();
-            if (netController.RPCMethods.TryGetValue(methodName, out var method))
-                method.Invoke();
+            if (RPCManager.RPCMethods.TryGetValue((targetName, methodName), out var method))
+                method.Invoke(null, null); // TODO: implement rpc with parameters
         }
         
         public static void SendData(byte[] buffer)

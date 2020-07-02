@@ -10,7 +10,7 @@ namespace VowelAServer.Gameplay.Utilities
     public class DevConsole : NetController
     {
         [RPC]
-        public void GetCommand()
+        public static void GetCommand()
         {
             Logger.Write("Hey, someone writes to me via RPC!");
         }

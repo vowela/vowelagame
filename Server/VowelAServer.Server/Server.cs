@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using ENet;
 using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Controllers;
+using VowelAServer.Server.Models;
 using VowelAServer.Server.Net;
-using VowelAServer.Server.Utils;
 using VowelAServer.Shared.Gameplay;
+using VowelAServer.Shared.Networking;
+using VowelAServer.Shared.Utils;
 using VowelAServer.Utilities.Logging;
 
 namespace VowelAServer.Server
@@ -22,25 +26,11 @@ namespace VowelAServer.Server
                 new WorldSimulation()
             };
         }
-        
-        
-        private static void InitControllers()
-        {
-            var netControllers = ReflectionHelper.GetEnumerableOfType<NetController>();
-            foreach (var netController in netControllers)
-            {
-                NetEventPoll.NetControllers.Add(netController.NetId, netController);
-            }
-            /*AuthController    = new AuthController();
-            LuaController     = new LuaController();
-            MenuController    = new MenuController();
-            ObjectsController = new ObjectsController();*/
-        }
 
         static void Main(string[] args)
         {
             InitTickables();
-            InitControllers();
+            RPCManager.GetOrBuildLookup();
 
             const ushort port = 6005;
             const int maxClients = 100;

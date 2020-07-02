@@ -16,6 +16,7 @@
     <IntermediateOutputPath>obj\MacOS</IntermediateOutputPath>
     <NoWarn></NoWarn>
     <NoStdLib>false</NoStdLib>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\VowelAServer.Db\VowelAServer.Db.csproj" />

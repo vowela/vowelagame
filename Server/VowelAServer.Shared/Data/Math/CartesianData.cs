@@ -37,5 +37,7 @@
         }
 
         public static Point operator +(Point p, Vector v) => new Point(p.X + v.X, p.Y + v.Y, p.Z + v.Z);
+
+        public double Distance(Point p2) => Math.Sqrt(Math.Pow(p2.X - X, 2) + Math.Pow(p2.Y - Y, 2));
     }
 }

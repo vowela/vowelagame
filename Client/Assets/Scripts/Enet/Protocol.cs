@@ -5,17 +5,9 @@ namespace Server
 {
     public class Protocol
     {
-        public static byte[] SerializeData(byte code, string json)
-        {
-            var protocol = new Protocol();
-            return protocol.Serialize(code, json);
-        }
-
-        public static byte[] SerializeData(byte code, uint value)
-        {
-            var protocol = new Protocol();
-            return protocol.Serialize(code, value);
-        }
+        public static byte[] SerializeData(byte code, string json)                          => new Protocol().Serialize(code, json);
+        public static byte[] SerializeData(byte code, uint value)                           => new Protocol().Serialize(code, value);
+        public static byte[] SerializeData(byte code, string targetName, string methodName) => new Protocol().Serialize(code, targetName, methodName);
 
         private void InitWriter(int size)
         {
@@ -45,6 +37,16 @@ namespace Server
             InitWriter(bufSize);
             m_writer.Write(code);
             m_writer.Write(json);
+            return m_buffer;
+        }
+        
+        public byte[] Serialize(byte code, string targetName, string methodName)
+        {
+            var bufSize = sizeof(byte) + System.Text.Encoding.ASCII.GetByteCount(targetName) * sizeof(char) + System.Text.Encoding.ASCII.GetByteCount(methodName) * sizeof(char);
+            InitWriter(bufSize);
+            m_writer.Write(code);
+            m_writer.Write(targetName);
+            m_writer.Write(methodName);
             return m_buffer;
         }
 

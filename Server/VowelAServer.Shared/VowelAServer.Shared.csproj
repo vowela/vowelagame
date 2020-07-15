@@ -30,4 +30,7 @@
     </CustomCommands>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VowelAServer.Utilities\VowelAServer.Utilities.csproj" />
+  </ItemGroup>
 </Project>

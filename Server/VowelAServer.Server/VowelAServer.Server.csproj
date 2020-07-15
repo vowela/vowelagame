@@ -16,6 +16,7 @@
     <IntermediateOutputPath>obj\MacOS</IntermediateOutputPath>
     <NoWarn></NoWarn>
     <NoStdLib>false</NoStdLib>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\VowelAServer.Db\VowelAServer.Db.csproj" />
@@ -24,8 +25,5 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ENet-CSharp" Version="2.3.5" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Net\" />
   </ItemGroup>
 </Project>

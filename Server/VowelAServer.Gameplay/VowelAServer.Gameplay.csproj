@@ -5,17 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Class1.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="MoonSharp" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\VowelAServer.Shared\VowelAServer.Shared.csproj" />
+    <ProjectReference Include="..\VowelAServer.Utilities\VowelAServer.Utilities.csproj" />
   </ItemGroup>
 </Project>

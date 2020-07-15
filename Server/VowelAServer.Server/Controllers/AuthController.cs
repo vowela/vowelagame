@@ -1,55 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using ENet;
-using VowelAServer.Server.Net;
+﻿using System.Collections.Generic;
 using VowelAServer.Server.Models;
-using VowelAServer.Shared.Data.Multiplayer;
-using Newtonsoft.Json;
 using VowelAServer.Shared.Models.Dtos;
 using VowelAServer.Db.Services;
-using VowelAServer.Gameplay.Controllers;
-using VowelAServer.Server.Controllers;
-using VowelAServer.Shared.Data;
-using VowelAServer.Shared.Data.Math;
 using VowelAServer.Server.Utils;
 using VowelAServer.Shared.Data.Enums;
+using VowelAServer.Shared.Networking;
 
-namespace VowelAServer.Server.Authorization
+namespace VowelAServer.Server.Controllers
 {
-    public class AuthController
+    public class AuthController : NetController
     {
         private const string AuthAreaName = "AuthorizationArea";
         private HashSet<Player> players = new HashSet<Player>();
-
-        public AuthController()
-        {
-            NetEventPoll.ServerEventHandler += NetEventPoll_ServerEventHandler;
-
-            CreateBaseAuthAreaIfNotExists();
-        }
-
-        private void CreateBaseAuthAreaIfNotExists()
-        {
-            if (!WorldAreaController.HasAreaName(AuthAreaName))
-            {
-                // Firstly create new area (The world center)
-                var newArea = new ContainerArea(new Vector(0, -63700));
-                WorldAreaController.CreateArea(newArea);
-                WorldAreaController.SetUniqueName(AuthAreaName, newArea.Id);
-                
-                // Then create a new auth object and place it in a new area
-                var authObject = new ContainerData
-                {
-                    ContainerName = "AuthObject",
-                    AreaId = newArea.Id,
-                    Position = new Point(0, -63700)
-                };
-
-                WorldObjectController.CreateObject(authObject);
-            }
-        }
 
         public bool Login(UserDto dto)
         {
@@ -78,9 +40,9 @@ namespace VowelAServer.Server.Authorization
             return UserService.CreateUser(userToAdd);
         }
 
-        private void NetEventPoll_ServerEventHandler(object sender, PacketId packetId)
+        private void NetEventPoll_ServerEventHandler(NetworkEvent networkEvent)
         {
-            var netEvent = (Event)sender;
+            /*var netEvent = (Event)sender;
             var playerId = netEvent.Peer.ID;
 
             if (netEvent.Type == EventType.Connect)
@@ -94,7 +56,7 @@ namespace VowelAServer.Server.Authorization
                     var data = Protocol.SerializeData((byte) PacketId.AreaResponse, authAreaJson);
                     NetController.SendData(data, ref netEvent);
                 }
-            }
+            }*/
             /*if (packetId == PacketId.ConnectionRequest)
             {
                 var readBuffer = new byte[netEvent.Packet.Length];

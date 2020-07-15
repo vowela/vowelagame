@@ -1,51 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using MoonSharp.Interpreter;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using VowelAServer.Gameplay.Models;
-using VowelAServer.Shared.Data;
-using VowelAServer.Shared.Interfaces;
+﻿using VowelAServer.Gameplay.Utilities;
+using VowelAServer.Shared.Gameplay;
+using VowelAServer.Utilities.Logging;
 
 namespace VowelAServer.Gameplay.Controllers
 {
     public class WorldSimulation : ITickable
     {
-        public static WorldSimulation Instance;
-
-        public SceneController SceneController = new SceneController();
-
         private float lastSavedTime;
-        private float timeToSave = 5000f; // 5 mins ( 300000 )
-
+        private float timeToSave             = 300000f; // 5 mins
+        private UtilitiesManager utilManager = new UtilitiesManager();
+        
         public WorldSimulation()
         {
-            Instance = this;
+            utilManager.CreateUtilities();
             WorldTime.Instance().Start(WorldTime.GetSavedTime());
-            InitScene();
         }
 
         public void Tick()
         {
-            foreach (var sceneObject in SceneController.Scene.SceneData)
-            {
-                //sceneObject.LuaCode
-            }
             if (WorldTime.Instance().GetWorldTime() > lastSavedTime + timeToSave)
             {
-                Console.WriteLine("Save the server data..");
+                Logger.Write("Save the server data..");
 
-                SceneController.SaveSceneData();
                 WorldTime.Instance().SaveTime();
-
                 lastSavedTime = WorldTime.Instance().GetWorldTime();
             }
-        }
-
-        private void InitScene()
-        {
-            SceneController.LoadSceneData();
         }
     }
 }

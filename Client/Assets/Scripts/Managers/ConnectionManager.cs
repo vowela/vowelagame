@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using ENet;
 using Server;
 using UnityEngine;
-using VowelAServer.Shared.Data.Multiplayer;
+using VowelAServer.Shared.Networking;
 
 public class ConnectionManager : MonoBehaviour
 {
     public static bool IsConnected;
-    public static event EventHandler<PacketId> ClientEventHandler;
     public static Peer CurrentPeer;
     public static Host Client;
     public string Ip = "127.0.0.1";
@@ -64,7 +60,7 @@ public class ConnectionManager : MonoBehaviour
         if (Client.CheckEvents(out netEvent) <= 0)
             if (Client.Service(0, out netEvent) <= 0) return;
 
-        var packetId = PacketId.None;
+        NetworkEvent networkEvent;
         switch (netEvent.Type)
         {
             case ENet.EventType.None:
@@ -72,6 +68,8 @@ public class ConnectionManager : MonoBehaviour
             case ENet.EventType.Connect:
                 Debug.Log("Client connected to server - ID: " + CurrentPeer.ID);
                 IsConnected = true;
+                
+                NetController.SendData(Protocol.SerializeData((byte)NetworkEvent.RPC, "DevConsole", "GetCommand"));
                 break;
             case ENet.EventType.Disconnect:
                 Debug.Log("Client disconnected from server");
@@ -86,19 +84,22 @@ public class ConnectionManager : MonoBehaviour
                 
                 var readBuffer = new byte[netEvent.Packet.Length];
                 var readStream = new MemoryStream(readBuffer);
-                var reader = new BinaryReader(readStream);
+                var reader     = new BinaryReader(readStream);
 
                 readStream.Position = 0;
                 netEvent.Packet.CopyTo(readBuffer);
-                packetId = (PacketId)reader.ReadByte();
+                networkEvent = (NetworkEvent)reader.ReadByte();
 
-                Debug.Log("ParsePacket received: " + packetId);
+                if (networkEvent == NetworkEvent.RPCResponse) ReceiveRpcCall(reader);
                 break;
         }
 
-        if (packetId != PacketId.None) ClientEventHandler?.Invoke(netEvent, packetId);
-
         if (netEvent.Type == ENet.EventType.Receive) netEvent.Packet.Dispose();
+    }
+
+    private void ReceiveRpcCall(BinaryReader reader)
+    {
+        Debug.Log($"RPC Call received, message: {reader.ReadString()}");
     }
 
     private void Connect() {

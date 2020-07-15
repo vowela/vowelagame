@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using ENet;
 using VowelAServer.Gameplay.Controllers;
-using VowelAServer.Server.Authorization;
 using VowelAServer.Server.Controllers;
+using VowelAServer.Server.Models;
 using VowelAServer.Server.Net;
-using VowelAServer.Shared.Interfaces;
+using VowelAServer.Shared.Gameplay;
+using VowelAServer.Shared.Networking;
+using VowelAServer.Shared.Utils;
+using VowelAServer.Utilities.Logging;
 
 namespace VowelAServer.Server
 {
@@ -13,10 +18,6 @@ namespace VowelAServer.Server
     {
         public static List<ITickable> Tickables;
         public static readonly Host HostInstance = new Host();
-        public static AuthController AuthController;
-        public static LuaController LuaController;
-        public static MenuController MenuController;
-        public static ObjectsController ObjectsController;
 
         private static void InitTickables()
         {
@@ -26,34 +27,24 @@ namespace VowelAServer.Server
             };
         }
 
-        private static void InitControllers()
-        {
-            AuthController    = new AuthController();
-            LuaController     = new LuaController();
-            MenuController    = new MenuController();
-            ObjectsController = new ObjectsController();
-        }
-
         static void Main(string[] args)
         {
             InitTickables();
-            InitControllers();
+            RPCManager.GetOrBuildLookup();
 
             const ushort port = 6005;
             const int maxClients = 100;
             Library.Initialize();
 
-            var address = new Address
-            {
-                Port = port
-            };
+            var address = new Address { Port = port };
             HostInstance.Create(address, maxClients);
 
-            Console.WriteLine($"Circle ENet Server started on {port}");
+            Logger.WriteSuccess($"Circle ENet Server started on {port}");
 
             var continueThread = true;
             while (continueThread)
             {
+                // Ticking gameplay logic
                 foreach (var tickable in Tickables)
                 {
                     tickable.Tick();

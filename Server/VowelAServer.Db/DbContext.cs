@@ -14,9 +14,7 @@ namespace VowelAServer.Db
             get 
             {
                 if (string.IsNullOrEmpty(dbPath))
-                {
-                    dbPath = Utils.GetDirPath("Storage") + @"/VowelaData.db";
-                }
+                    dbPath = DirectoryUtils.GetDirPath("Storage") + @"/VowelaData.db";
 
                 return dbPath;
             }

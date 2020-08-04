@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using ENet;
-using Server;
 using UnityEngine;
 using VowelAServer.Shared.Networking;
+using VowelAServer.Shared.Utils;
 
 public class ConnectionManager : MonoBehaviour
 {
@@ -69,7 +69,7 @@ public class ConnectionManager : MonoBehaviour
                 Debug.Log("Client connected to server - ID: " + CurrentPeer.ID);
                 IsConnected = true;
                 
-                NetController.SendData(Protocol.SerializeData((byte)NetworkEvent.RPC, "DevConsole", "GetCommand"));
+                NetController.RPC("DevConsole", "GetCommand", "Hey");
                 break;
             case ENet.EventType.Disconnect:
                 Debug.Log("Client disconnected from server");
@@ -90,7 +90,7 @@ public class ConnectionManager : MonoBehaviour
                 netEvent.Packet.CopyTo(readBuffer);
                 networkEvent = (NetworkEvent)reader.ReadByte();
 
-                if (networkEvent == NetworkEvent.RPCResponse) ReceiveRpcCall(reader);
+                //if (networkEvent == NetworkEvent.RPCResponse) ReceiveRpcCall(reader);
                 break;
         }
 

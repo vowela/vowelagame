@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using ENet;
-using VowelAServer.Server.Controllers;
-using VowelAServer.Server.Models;
+using VowelAServer.Server.Managers;
 using VowelAServer.Shared.Networking;
+using VowelAServer.Utilities.Helpers;
 using VowelAServer.Utilities.Logging;
 
 namespace VowelAServer.Server.Net
@@ -64,8 +63,17 @@ namespace VowelAServer.Server.Net
             // Find needed controller and method
             var targetName = reader.ReadString();
             var methodName = reader.ReadString();
+            // Parse arguments data
+            var argsCount  = reader.ReadInt32();
+            var arguments = new List<object>();
+            for (var i = 0; i < argsCount; i++)
+            {
+                var argLength = reader.ReadInt32();
+                var argData   = reader.ReadBytes(argLength);
+                arguments.Add(SerializationHelper.DeserializeFromBytes(argData));
+            }
             if (RPCManager.RPCMethods.TryGetValue((targetName, methodName), out var method))
-                method.Invoke(null, null); // TODO: implement rpc with parameters
+                method.Invoke(null, arguments.ToArray()); // TODO: implement rpc with parameters
         }
         
         public static void SendData(byte[] buffer)

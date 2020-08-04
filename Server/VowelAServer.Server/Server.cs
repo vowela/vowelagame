@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using ENet;
 using VowelAServer.Gameplay.Controllers;
-using VowelAServer.Server.Controllers;
-using VowelAServer.Server.Models;
+using VowelAServer.Server.Managers;
 using VowelAServer.Server.Net;
 using VowelAServer.Shared.Gameplay;
-using VowelAServer.Shared.Networking;
-using VowelAServer.Shared.Utils;
 using VowelAServer.Utilities.Logging;
 
 namespace VowelAServer.Server
@@ -39,7 +34,7 @@ namespace VowelAServer.Server
             var address = new Address { Port = port };
             HostInstance.Create(address, maxClients);
 
-            Logger.WriteSuccess($"Circle ENet Server started on {port}");
+            Logger.WriteSuccess($"VowelA Game Server started on port: {port}");
 
             var continueThread = true;
             while (continueThread)

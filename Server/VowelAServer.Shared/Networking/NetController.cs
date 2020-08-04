@@ -1,12 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using VowelAServer.Server.Models;
-using VowelAServer.Shared.Utils;
-using VowelAServer.Utilities.Logging;
 
-namespace VowelAServer.Server.Controllers
+namespace VowelAServer.Shared.Controllers
 {
     public abstract class NetController : IComparable<NetController>
     {

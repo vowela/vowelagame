@@ -19,7 +19,7 @@ namespace VowelAServer.Gameplay.Controllers
         {
             get
             {
-                if (string.IsNullOrEmpty(timeDataPath)) { timeDataPath = Utils.GetDirPath("Storage") + @"/time.json"; }
+                if (string.IsNullOrEmpty(timeDataPath)) { timeDataPath = DirectoryUtils.GetDirPath("Storage") + @"/time.json"; }
 
                 return timeDataPath;
             }

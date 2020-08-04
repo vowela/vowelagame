@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Reflection;
-using VowelAServer.Server.Controllers;
 using VowelAServer.Server.Models;
-using VowelAServer.Shared.Utils;
-using VowelAServer.Utilities.Logging;
+using VowelAServer.Shared.Controllers;
+using VowelAServer.Utilities.Helpers;
 
-namespace VowelAServer.Shared.Networking
+namespace VowelAServer.Server.Managers
 {
     public static class RPCManager
     {

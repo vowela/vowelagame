@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VowelAServer.Shared.Utils
 {
-    public class Utils
+    public class DirectoryUtils
     {
         public static string GetDirPath(string dirName)
         {

@@ -1,5 +1,5 @@
-using VowelAServer.Server.Controllers;
 using VowelAServer.Server.Models;
+using VowelAServer.Shared.Controllers;
 using VowelAServer.Utilities.Logging;
 
 namespace VowelAServer.Gameplay.Utilities
@@ -10,9 +10,9 @@ namespace VowelAServer.Gameplay.Utilities
     public class DevConsole : NetController
     {
         [RPC]
-        public static void GetCommand()
+        public static void GetCommand(string message)
         {
-            Logger.Write("Hey, someone writes to me via RPC!");
+            Logger.WriteSuccess($"Client just sent me: {message}");
         }
     }
 }

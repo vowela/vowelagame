@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using VowelAServer.Utilities.Logging;
 
-namespace VowelAServer.Shared.Utils
+namespace VowelAServer.Utilities.Helpers
 {
     public static class ReflectionHelper
     {
@@ -36,9 +35,9 @@ namespace VowelAServer.Shared.Utils
             {
                 return assembly.GetTypes().Where(t => (includeSelf || t != baseType) && baseType.IsAssignableFrom(t));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Logger.WriteWarning($"Failed to get derived types for '{baseType.FullName}' in assembly '{assembly.FullName}' (usually safe to ignore for third party assembly). Error message: {e.Message}");
+                // Failed to get derived types for '{baseType.FullName}' in assembly '{assembly.FullName}' (usually safe to ignore for third party assembly)
                 return Array.Empty<Type>();
             }
         }

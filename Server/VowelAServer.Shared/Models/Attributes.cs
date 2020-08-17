@@ -1,11 +1,7 @@
 using System;
 
-namespace VowelAServer.Server.Models
+namespace VowelAServer.Shared.Models
 {
-    public class Attributes
-    {
-        /// <summary> Creates an RPC that can be called on the client. </summary>
-        [AttributeUsage(AttributeTargets.Method)] public class RPCAttribute : Attribute { }
-        
-    }
+    /// <summary> Creates an RPC that can be called on client or server. </summary>
+    [AttributeUsage(AttributeTargets.Method)] public class RPC : Attribute { }
 }

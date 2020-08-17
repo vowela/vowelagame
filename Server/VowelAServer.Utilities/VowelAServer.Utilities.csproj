@@ -5,4 +5,12 @@
         <RootNamespace>VowelAServer.Utilities</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\VowelAServer.Shared\VowelAServer.Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ENet-CSharp" Version="2.3.5" />
+    </ItemGroup>
+
 </Project>

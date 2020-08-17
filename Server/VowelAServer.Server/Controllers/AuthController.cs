@@ -3,13 +3,12 @@ using VowelAServer.Server.Models;
 using VowelAServer.Shared.Models.Dtos;
 using VowelAServer.Db.Services;
 using VowelAServer.Server.Utils;
-using VowelAServer.Shared.Controllers;
 using VowelAServer.Shared.Data.Enums;
 using VowelAServer.Shared.Networking;
 
 namespace VowelAServer.Server.Controllers
 {
-    public class AuthController : NetController
+    public class AuthController
     {
         private const string AuthAreaName = "AuthorizationArea";
         private HashSet<Player> players = new HashSet<Player>();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ENet;
 using VowelAServer.Gameplay.Controllers;
+using VowelAServer.Server.Controllers;
 using VowelAServer.Server.Managers;
 using VowelAServer.Server.Net;
 using VowelAServer.Shared.Gameplay;
@@ -18,7 +19,8 @@ namespace VowelAServer.Server
         {
             Tickables = new List<ITickable>
             {
-                new WorldSimulation()
+                new WorldSimulation(),
+                new RPCPoller()
             };
         }
 

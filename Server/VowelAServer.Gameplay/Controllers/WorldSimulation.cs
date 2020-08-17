@@ -1,5 +1,4 @@
-﻿using VowelAServer.Gameplay.Utilities;
-using VowelAServer.Shared.Gameplay;
+﻿using VowelAServer.Shared.Gameplay;
 using VowelAServer.Utilities.Logging;
 
 namespace VowelAServer.Gameplay.Controllers
@@ -7,12 +6,10 @@ namespace VowelAServer.Gameplay.Controllers
     public class WorldSimulation : ITickable
     {
         private float lastSavedTime;
-        private float timeToSave             = 300000f; // 5 mins
-        private UtilitiesManager utilManager = new UtilitiesManager();
+        private float timeToSave = 300000f; // 5 mins
         
         public WorldSimulation()
         {
-            utilManager.CreateUtilities();
             WorldTime.Instance().Start(WorldTime.GetSavedTime());
         }
 

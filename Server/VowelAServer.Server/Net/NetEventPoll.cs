@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using ENet;
+using VowelAServer.Gameplay.Controllers;
+using VowelAServer.Server.Controllers;
 using VowelAServer.Server.Managers;
 using VowelAServer.Shared.Networking;
 using VowelAServer.Utilities.Helpers;
@@ -49,7 +51,8 @@ namespace VowelAServer.Server.Net
                         eNetEvent.Packet.CopyTo(readBuffer);
                         networkEvent = (NetworkEvent)reader.ReadByte();
 
-                        if (networkEvent == NetworkEvent.RPC) CallRpcMethod(reader);
+                        if (networkEvent == NetworkEvent.RPCStatic) CallRpcMethod(reader);
+                        else if (networkEvent == NetworkEvent.RPC)  CallObjectRpcMethod(reader);
                         break;
                 }
 
@@ -58,14 +61,22 @@ namespace VowelAServer.Server.Net
             }
         }
 
-        private static void CallRpcMethod(BinaryReader reader)
+        private static void CallObjectRpcMethod(BinaryReader reader)
+        {
+            // Determine target name for class using object id
+            var netObjectId = reader.ReadInt32();
+            var netObject   = NetObject.FindNetObjectById(netObjectId);
+            if (netObject != null) CallRpcMethod(reader, netObject.GetType().Name, netObject);
+        }
+
+        private static void CallRpcMethod(BinaryReader reader, string targetName = "", object caller = null)
         {
             // Find needed controller and method
-            var targetName = reader.ReadString();
+            targetName     = string.IsNullOrEmpty(targetName) ? reader.ReadString() : targetName;
             var methodName = reader.ReadString();
             // Parse arguments data
             var argsCount  = reader.ReadInt32();
-            var arguments = new List<object>();
+            var arguments  = new List<object>();
             for (var i = 0; i < argsCount; i++)
             {
                 var argLength = reader.ReadInt32();
@@ -73,21 +84,7 @@ namespace VowelAServer.Server.Net
                 arguments.Add(SerializationHelper.DeserializeFromBytes(argData));
             }
             if (RPCManager.RPCMethods.TryGetValue((targetName, methodName), out var method))
-                method.Invoke(null, arguments.ToArray()); // TODO: implement rpc with parameters
-        }
-        
-        public static void SendData(byte[] buffer)
-        {
-            var packet = default(Packet);
-            packet.Create(buffer);
-            Server.HostInstance.Broadcast(0, ref packet);
-        }
-
-        public static void SendData(byte[] buffer, ref Event netEvent)
-        {
-            var packet = default(Packet);
-            packet.Create(buffer);
-            netEvent.Peer.Send(0, ref packet);
+                method.Invoke(caller, arguments.ToArray());
         }
     }
 }

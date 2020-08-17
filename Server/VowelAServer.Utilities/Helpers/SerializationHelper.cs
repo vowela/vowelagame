@@ -1,6 +1,8 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
+// Changes to these script are sensitive! Due to using IO and runtime formatter libs it's not possible to put
+// this script into shared project, so this script is copied into Client. Changes to serializer are required for both!
 namespace VowelAServer.Utilities.Helpers
 {
     public class SerializationData
@@ -10,60 +12,62 @@ namespace VowelAServer.Utilities.Helpers
         public MemoryStream Stream;
         public byte[] Buffer;
     }
-    
+
     public class SerializationHelper
     {
         public static byte[] SerializeToBytes<T>(T item)
         {
-            var formatter     = new BinaryFormatter();
-            using var stream  = new MemoryStream();
+            var formatter = new BinaryFormatter();
+            var stream = new MemoryStream();
             formatter.Serialize(stream, item);
             stream.Seek(0, SeekOrigin.Begin);
             return stream.ToArray();
         }
-        
+
         public static object DeserializeFromBytes(byte[] bytes)
         {
-            var formatter    = new BinaryFormatter();
-            using var stream = new MemoryStream(bytes);
+            var formatter = new BinaryFormatter();
+            var stream = new MemoryStream(bytes);
             return formatter.Deserialize(stream);
         }
-        
+
         private static SerializationData InitWriter(int size)
         {
-            var serializationData    = new SerializationData { Buffer = new byte[size] };
+            var serializationData = new SerializationData {Buffer = new byte[size]};
             serializationData.Stream = new MemoryStream(serializationData.Buffer);
             serializationData.Writer = new BinaryWriter(serializationData.Stream);
             return serializationData;
         }
-        
+
         private static SerializationData InitReader(byte[] buffer)
         {
-            var serializationData    = new SerializationData { Stream = new MemoryStream(buffer) };
+            var serializationData = new SerializationData {Stream = new MemoryStream(buffer)};
             serializationData.Reader = new BinaryReader(serializationData.Stream);
             return serializationData;
         }
-        
-        public static byte[] Serialize(byte code, string targetName, string methodName, params object[] args)
+
+        public static byte[] Serialize(byte code, string methodName, string targetName = "", int objectId = -1, params object[] args)
         {
             // Calculate sizes
-            var bufSize = sizeof(byte) + targetName.Length * sizeof(char) + methodName.Length * sizeof(char);
+            var bufSize = sizeof(byte) + (objectId == -1 ? targetName.Length * sizeof(char) : sizeof(int)) + methodName.Length * sizeof(char) + sizeof(int);
             foreach (var arg in args)
             {
-                var typeName = arg.GetType().FullName;
-                bufSize += typeName.Length * sizeof(char);
-                bufSize += SerializeToBytes(arg).Length;
+                bufSize += sizeof(int);                  // Argument data length
+                bufSize += SerializeToBytes(arg).Length; // Argument data
             }
             
             // Write data to binary writer
             var data = InitWriter(bufSize);
             data.Writer.Write(code);
-            data.Writer.Write(targetName);
+            if (objectId == -1) data.Writer.Write(targetName);
+            else                data.Writer.Write(objectId);
             data.Writer.Write(methodName);
+            data.Writer.Write(args.Length);
             foreach (var arg in args)
             {
-                data.Writer.Write(arg.GetType().FullName ?? "");
-                data.Writer.Write(SerializeToBytes(arg));
+                var argData = SerializeToBytes(arg);
+                data.Writer.Write(argData.Length);
+                data.Writer.Write(argData);
             }
             return data.Buffer;
         }

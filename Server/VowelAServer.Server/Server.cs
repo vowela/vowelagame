@@ -2,30 +2,33 @@
 using System.Collections.Generic;
 using ENet;
 using VowelAServer.Gameplay.Controllers;
+using VowelAServer.Gameplay.Debugging;
 using VowelAServer.Server.Controllers;
 using VowelAServer.Server.Managers;
 using VowelAServer.Server.Net;
 using VowelAServer.Shared.Gameplay;
+using VowelAServer.Utilities.Helpers;
+using VowelAServer.Utilities.Interfaces;
 using VowelAServer.Utilities.Logging;
 
 namespace VowelAServer.Server
 {
     class Server
     {
-        public static List<ITickable> Tickables;
+        public static readonly List<ITickable> Tickables = new List<ITickable>();
         public static readonly Host HostInstance = new Host();
 
         private static void InitTickables()
         {
-            Tickables = new List<ITickable>
-            {
-                new WorldSimulation(),
-                new RPCPoller()
-            };
+            var tickables = typeof(ITickable).DerivedTypes();
+            foreach (var tickable in tickables) Tickables.Add((ITickable)Activator.CreateInstance(tickable));
         }
 
         static void Main(string[] args)
         {
+            // Make sure that Gameplay has been started
+            var runner = new Runner();
+            
             InitTickables();
             RPCManager.GetOrBuildLookup();
 

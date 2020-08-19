@@ -10,32 +10,26 @@ namespace VowelAServer.Db.Services
     {
         public static bool CreateUser(User user)
         {
-            using (var db = new LiteDatabase(DbContext.DbPath))
-            {
-                var users = db.GetCollection<User>("users");
+            using var db = new LiteDatabase(DbContext.DbPath);
+            var users = db.GetCollection<User>("users");
 
-                users.EnsureIndex(x => x.Login);
+            users.EnsureIndex(x => x.Login);
 
-                var addedUser = users.FindOne(x => x.Login == user.Login);
+            var addedUser = users.FindOne(x => x.Login == user.Login);
+            if (addedUser != null) return false;
 
-                if (addedUser != null) return false;
-
-                users.Insert(user);
-
-                return true;
-            }
+            users.Insert(user);
+            return GetUserByLogin(user.Login) != null;
         }
 
         public static User GetUserByLogin(string login)
         {
-            using (var db = new LiteDatabase(DbContext.DbPath))
-            {
-                var users = db.GetCollection<User>("users");
+            using var db = new LiteDatabase(DbContext.DbPath);
+            var users = db.GetCollection<User>("users");
 
-                users.EnsureIndex(x => x.Login);
+            users.EnsureIndex(x => x.Login);
 
-                return users.FindOne(x => x.Login == login);
-            }
+            return users.FindOne(x => x.Login == login);
         }
     }
 }

@@ -69,16 +69,15 @@ public class ConnectionManager : MonoBehaviour
             case ENet.EventType.Connect:
                 Debug.Log("Client connected to server - ID: " + CurrentPeer.ID);
                 IsConnected = true;
-                
-                // Static RPC: UnityNetController.RPC("DevConsole", "GetCommand", "Hey");
-                // Object RPC: Player.Obj.RPC("GetCommand", "Hey!");
                 break;
             case ENet.EventType.Disconnect:
                 Debug.Log("Client disconnected from server");
+                IsConnected = false;
                 Connect();
                 break;
             case ENet.EventType.Timeout:
                 Debug.Log("Client connection timeout");
+                IsConnected = false;
                 Connect();
                 break;
             case ENet.EventType.Receive:
@@ -100,6 +99,7 @@ public class ConnectionManager : MonoBehaviour
         if (netEvent.Type == ENet.EventType.Receive) netEvent.Packet.Dispose();
     }
 
+    // TODO: Make these calls in shared project somehow
     private static void CallObjectRpcMethod(BinaryReader reader)
     {
         // Determine target name for class using object id

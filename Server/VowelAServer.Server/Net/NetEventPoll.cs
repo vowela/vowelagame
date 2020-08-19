@@ -4,6 +4,7 @@ using ENet;
 using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Controllers;
 using VowelAServer.Server.Managers;
+using VowelAServer.Server.Models;
 using VowelAServer.Shared.Networking;
 using VowelAServer.Utilities.Helpers;
 using VowelAServer.Utilities.Logging;
@@ -32,14 +33,20 @@ namespace VowelAServer.Server.Net
                     case EventType.Connect:
                         Logger.Write("Client connected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
                         eNetEvent.Peer.Timeout(32, 1000, 4000);
+                        
+                        RPCPoller.AddPeer(eNetEvent.Peer);
                         break;
                     case EventType.Timeout:
                         Logger.Write("Client timeout - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
                         networkEvent = NetworkEvent.DisconnectReason;
+                        
+                        RPCPoller.RemovePeer(eNetEvent.Peer.ID);
                         break;
                     case EventType.Disconnect:
                         Logger.Write("Client disconnected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
                         networkEvent = NetworkEvent.DisconnectReason;
+                            
+                        RPCPoller.RemovePeer(eNetEvent.Peer.ID);
                         break;
                     case EventType.Receive:
                         //Logger.Write("Packet received from - ID: " + netEvent.Peer.ID + ", IP: " + netEvent.Peer.IP + ", Channel ID: " + netEvent.ChannelID + ", Data length: " + netEvent.Packet.Length
@@ -51,8 +58,13 @@ namespace VowelAServer.Server.Net
                         eNetEvent.Packet.CopyTo(readBuffer);
                         networkEvent = (NetworkEvent)reader.ReadByte();
 
-                        if (networkEvent == NetworkEvent.RPCStatic) CallRpcMethod(reader);
-                        else if (networkEvent == NetworkEvent.RPC)  CallObjectRpcMethod(reader);
+                        var player = Player.GetPlayerByNetID((int)eNetEvent.Peer.ID);
+                        if (player != null)
+                        {
+                            if (networkEvent == NetworkEvent.RPCStatic) CallRpcMethod(player, reader);
+                            else if (networkEvent == NetworkEvent.RPC)  CallObjectRpcMethod(player, reader);
+                        }
+
                         break;
                 }
 
@@ -61,15 +73,16 @@ namespace VowelAServer.Server.Net
             }
         }
 
-        private static void CallObjectRpcMethod(BinaryReader reader)
+        // TODO: Make these calls in shared project somehow
+        private static void CallObjectRpcMethod(Player player, BinaryReader reader)
         {
             // Determine target name for class using object id
             var netObjectId = reader.ReadInt32();
             var netObject   = NetObject.FindNetObjectById(netObjectId);
-            if (netObject != null) CallRpcMethod(reader, netObject.GetType().Name, netObject);
+            if (netObject != null) CallRpcMethod(player, reader, netObject.GetType().Name, netObject);
         }
 
-        private static void CallRpcMethod(BinaryReader reader, string targetName = "", object caller = null)
+        private static void CallRpcMethod(Player player, BinaryReader reader, string targetName = "", object caller = null)
         {
             // Find needed controller and method
             targetName     = string.IsNullOrEmpty(targetName) ? reader.ReadString() : targetName;
@@ -83,8 +96,18 @@ namespace VowelAServer.Server.Net
                 var argData   = reader.ReadBytes(argLength);
                 arguments.Add(SerializationHelper.DeserializeFromBytes(argData));
             }
+
             if (RPCManager.RPCMethods.TryGetValue((targetName, methodName), out var method))
-                method.Invoke(caller, arguments.ToArray());
+            {
+                // If arguments count not exact, pass player at the first argument
+                if (method.GetParameters().Length == arguments.Count)
+                    method.Invoke(caller, arguments.ToArray());
+                else
+                {
+                    arguments.Insert(0, player);
+                    method.Invoke(caller, arguments.ToArray());
+                }
+            }
         }
     }
 }

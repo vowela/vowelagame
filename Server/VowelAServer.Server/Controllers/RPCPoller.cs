@@ -1,17 +1,29 @@
+using System.Collections.Generic;
 using ENet;
 using VowelAServer.Shared.Gameplay;
 using VowelAServer.Utilities.Network;
 
 namespace VowelAServer.Server.Controllers
 {
+    /// <summary>
+    /// This class corresponds to managing new peers (connections) over the network session
+    /// Also as it's a tick, it processes all rpc commands in poll
+    /// </summary>
     public class RPCPoller : ITickable
     {
+        private static readonly Dictionary<uint, Peer> ConnectedPeers = new Dictionary<uint, Peer>();
+
+        public static void AddPeer(Peer peer) => ConnectedPeers[peer.ID] = peer;
+        public static void RemovePeer(uint peerId) => ConnectedPeers.Remove(peerId);
+        
         public void Tick()
         {
             if (RPCPoll.RPCQueue.TryDequeue(out var rpcData))
             {
-                if (rpcData.peer.IsSet) SendData(rpcData.data);
-                else                    SendData(rpcData.data, ref rpcData.peer);
+                if (rpcData.peerId == -1)           
+                    SendData(rpcData.data);
+                else if (ConnectedPeers.TryGetValue((uint)rpcData.peerId, out var peer)) 
+                    SendData(rpcData.data, ref peer);
             }
         }
         

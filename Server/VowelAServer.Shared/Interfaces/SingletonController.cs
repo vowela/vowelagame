@@ -1,6 +1,6 @@
 using System;
 
-namespace VowelAServer.Utilities.Interfaces
+namespace VowelAServer.Shared.Interfaces
 {
     public abstract class SingletonController<T> where T : SingletonController<T>, new()
     {

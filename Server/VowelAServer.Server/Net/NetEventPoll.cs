@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ENet;
 using VowelAServer.Gameplay.Controllers;
@@ -33,37 +34,32 @@ namespace VowelAServer.Server.Net
                     case EventType.Connect:
                         Logger.Write("Client connected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
                         eNetEvent.Peer.Timeout(32, 1000, 4000);
-                        
-                        RPCPoller.AddPeer(eNetEvent.Peer);
                         break;
                     case EventType.Timeout:
                         Logger.Write("Client timeout - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
                         networkEvent = NetworkEvent.DisconnectReason;
-                        
-                        RPCPoller.RemovePeer(eNetEvent.Peer.ID);
                         break;
                     case EventType.Disconnect:
                         Logger.Write("Client disconnected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
                         networkEvent = NetworkEvent.DisconnectReason;
-                            
-                        RPCPoller.RemovePeer(eNetEvent.Peer.ID);
                         break;
                     case EventType.Receive:
                         //Logger.Write("Packet received from - ID: " + netEvent.Peer.ID + ", IP: " + netEvent.Peer.IP + ", Channel ID: " + netEvent.ChannelID + ", Data length: " + netEvent.Packet.Length
                         var readBuffer = new byte[eNetEvent.Packet.Length];
                         var readStream = new MemoryStream(readBuffer);
-                        var reader     = new BinaryReader(readStream);
+                        var reader = new BinaryReader(readStream);
 
                         readStream.Position = 0;
                         eNetEvent.Packet.CopyTo(readBuffer);
-                        networkEvent = (NetworkEvent)reader.ReadByte();
 
-                        var player = Player.GetPlayerByNetID((int)eNetEvent.Peer.ID);
-                        if (player != null)
-                        {
-                            if (networkEvent == NetworkEvent.RPCStatic) CallRpcMethod(player, reader);
-                            else if (networkEvent == NetworkEvent.RPC)  CallObjectRpcMethod(player, reader);
-                        }
+                        var player = (Guid.TryParse(reader.ReadString(), out var sid)
+                            ? Player.GetPlayerBySID(sid)
+                            : null) ?? Player.Undefined(eNetEvent.Peer);
+                        
+                        networkEvent = (NetworkEvent)reader.ReadByte();
+                        
+                        if (networkEvent == NetworkEvent.RPCStatic) CallRpcMethod(player, reader);
+                        else if (networkEvent == NetworkEvent.RPC)  CallObjectRpcMethod(player, reader);
 
                         break;
                 }

@@ -5,6 +5,6 @@ namespace VowelAServer.Utilities.Network
 {
     public class RPCPoll
     {
-        public static Queue<(int peerId, byte[] data)> RPCQueue = new Queue<(int peerId, byte[] data)>();
+        public static Queue<(Peer peer, byte[] data)> RPCQueue = new Queue<(Peer peer, byte[] data)>();
     }
 }

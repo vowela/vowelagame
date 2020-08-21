@@ -8,7 +8,7 @@ namespace VowelAServer.Gameplay.Debugging.ConsoleCommands
         
         public static void Register(string data)
         {
-            Logger.WriteError("Someone wants to suck " + data);
+            Logger.WriteError("Someone joined here");
         }
 
     }

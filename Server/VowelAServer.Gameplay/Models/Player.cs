@@ -1,39 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using ENet;
 
 namespace VowelAServer.Server.Models
 {
-    public class Player: IEquatable<Player>
+    public class Player
     {
-        private static readonly HashSet<Player> players = new HashSet<Player>();
+        private static readonly Dictionary<Guid, Player> sidPlayers = new Dictionary<Guid, Player>();
+        public static Player Undefined(Peer peer) => new Player(peer);
         
-        public static Player Undefined() => new Player(-1);
+        public bool IsRegistered => sessionId != Guid.Empty;
         
-        public readonly int Id;
-        public int NetworkID;
+        public Peer NetPeer;
         
-        public Player(int playerId)
+        private Guid sessionId;
+
+        // Creates undefined player
+        public Player(Peer peer) { NetPeer = peer;}
+
+        public static Player GetPlayerBySID(Guid sid)
         {
-            this.Id = playerId;
+            if (sidPlayers.TryGetValue(sid, out var player)) return player;
+            return null;
         }
 
-        public bool Equals([AllowNull] Player other)
+        public void Unregister(Guid sessionId)
         {
-            return other != null && this.Id.Equals(other.Id);
+            this.sessionId = Guid.Empty;
+            sidPlayers.Remove(sessionId);
+        }
+        
+        public void Register(Guid sessionId)
+        {
+            this.sessionId        = sessionId;
+            sidPlayers[sessionId] = this;
         }
 
-        public override int GetHashCode()
-        {
-            return this.Id.GetHashCode();
-        }
-
-        public static Player GetPlayerByNetID(int netId)
-        {
-            if (players.TryGetValue(new Player(netId), out var player)) return player;
-            var undefined = Undefined();
-            undefined.NetworkID = netId;
-            return undefined;
-        } 
+        public Guid GetSId() => sessionId;
     }
 }

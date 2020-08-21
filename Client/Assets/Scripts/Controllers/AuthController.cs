@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 using VowelAServer.Shared.Models.Dtos;
@@ -7,39 +8,32 @@ using RPC = VowelAServer.Shared.Models.RPC;
 
 public class AuthController : StaticNetworkComponent
 {
-    public Button LoginButton;
-    
-    private string login;
-    private string password;
+    public const string SessionID = "SessionID";
 
-    public void OnLoginChange(string login) => this.login = login;
+    public delegate void AuthorizationHandler(AuthResult result);
+    public static event AuthorizationHandler AuthorizationNotify;
 
-    public void OnPasswordChange(string password) => this.password = password;
-
-    private void Update()
+    [RPC]
+    public static void OnRegistered(bool isRegistered)
     {
-        if (ConnectionManager.IsConnected && !LoginButton.IsInteractable())      LoginButton.interactable = true;
-        else if (!ConnectionManager.IsConnected && LoginButton.IsInteractable()) LoginButton.interactable = false;
-    }
-    
-    public void Login()
-    {
-        var user = new UserDto {Login = login, Password = password};
-
-        RPC("AuthController", "Login", user);
-        RPC("DeveloperConsole", "ProcessCommand", "Auth", "Register", new object[] {"pipiska"});
-    }
-
-    public void Register()
-    {
-        var user = new UserDto {Login = login, Password = password};
-
-        RPC("AuthController", "Register", user);
+        Debug.Log(isRegistered ? "Registered new account" : "Can't register, try again");
     }
     
     [RPC]
-    public static void OnAuthorized(bool isAuthorized)
+    public static void OnAuthorized((AuthResult result, Guid sessionId) authResult)
     {
-        Debug.Log(isAuthorized ? "User exists" : "User not registered?");
+        if (authResult.result == AuthResult.Unauthorized || authResult.sessionId == Guid.Empty)
+        {
+            Debug.Log("Player Unauthorized");
+            PlayerPrefs.DeleteKey(SessionID);
+            PlayerPrefs.Save();
+            AuthorizationNotify?.Invoke(AuthResult.Unauthorized);
+            return;
+        }
+        
+        PlayerPrefs.SetString(SessionID, authResult.sessionId.ToString());
+        PlayerPrefs.Save();
+        Debug.Log("SID saved, player logged in");
+        AuthorizationNotify?.Invoke(AuthResult.Authorized);
     }
 }

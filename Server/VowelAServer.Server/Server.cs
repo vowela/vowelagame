@@ -8,7 +8,6 @@ using VowelAServer.Server.Managers;
 using VowelAServer.Server.Net;
 using VowelAServer.Shared.Gameplay;
 using VowelAServer.Utilities.Helpers;
-using VowelAServer.Utilities.Interfaces;
 using VowelAServer.Utilities.Logging;
 
 namespace VowelAServer.Server

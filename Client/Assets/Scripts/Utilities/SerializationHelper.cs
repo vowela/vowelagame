@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
 // Changes to these script are sensitive! Due to using IO and runtime formatter libs it's not possible to put
 // this script into shared project, so this script is copied into Server. Changes to serializer are required for both!
@@ -44,10 +45,13 @@ public class SerializationHelper
         return serializationData;
     }
 
+    // RPC Serialization
     public static byte[] Serialize(byte code, string methodName, string targetName = "", int objectId = -1, params object[] args)
     {
         // Calculate sizes
-        var bufSize = sizeof(byte) + (objectId == -1 ? targetName.Length * sizeof(char) : sizeof(int)) + methodName.Length * sizeof(char) + sizeof(int);
+        var bufSize = PlayerPrefs.GetString(AuthController.SessionID).Length * sizeof(char) + sizeof(byte) +
+                      (objectId == -1 ? targetName.Length * sizeof(char) : sizeof(int)) +
+                      methodName.Length * sizeof(char) + sizeof(int);
         foreach (var arg in args)
         {
             bufSize += sizeof(int);                  // Argument data length
@@ -56,10 +60,16 @@ public class SerializationHelper
         
         // Write data to binary writer
         var data = InitWriter(bufSize);
+        // Session id goes first
+        data.Writer.Write(PlayerPrefs.GetString(AuthController.SessionID));
+        // Then Network Event Code
         data.Writer.Write(code);
+        // Target name for static rpc or object id for dynamic
         if (objectId == -1) data.Writer.Write(targetName);
         else                data.Writer.Write(objectId);
+        // Method name goes next
         data.Writer.Write(methodName);
+        // Arguments list here
         data.Writer.Write(args.Length);
         foreach (var arg in args)
         {
@@ -68,14 +78,5 @@ public class SerializationHelper
             data.Writer.Write(argData);
         }
         return data.Buffer;
-    }
-
-    public static void Deserialize(byte[] buf, out byte code, out string json)
-    {
-        var data = InitReader(buf);
-        data.Stream.Write(buf, 0, buf.Length);
-        data.Stream.Position = 0;
-        code = data.Reader.ReadByte();
-        json = data.Reader.ReadString();
     }
 }

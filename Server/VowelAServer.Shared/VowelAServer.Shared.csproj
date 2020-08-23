@@ -30,4 +30,7 @@
     </CustomCommands>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="COPY &quot;$(TargetDir)/$(ProjectName).dll&quot; &quot;$(SolutionDir)/../Client/Assets/Shared/&quot;" />
+  </Target>
 </Project>

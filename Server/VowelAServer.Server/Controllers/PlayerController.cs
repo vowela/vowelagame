@@ -13,7 +13,7 @@ namespace VowelAServer.Server.Controllers
             if (!player.IsRegistered) return;
             
             var playerProfile = UserService.GetPlayerProfileBySID(player.GetSId());
-            RPC("PlayerController", "SetPlayerData", playerProfile);
+            RPC(player.NetPeer, "PlayerController", "SetPlayerData", playerProfile);
         }
 
         [RPC] public static void SetPlayerData(Player player, PlayerProfile playerProfile)
@@ -21,7 +21,7 @@ namespace VowelAServer.Server.Controllers
             if (!player.IsRegistered) return;
 
             UserService.UpdatePlayerProfileData(playerProfile);
-            RPC("PlayerController", "SetPlayerData", playerProfile);
+            RPC(player.NetPeer, "PlayerController", "SetPlayerData", playerProfile);
         }
     }
 }

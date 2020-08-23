@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using ENet;
 using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Gameplay.Debugging;
@@ -25,7 +26,7 @@ namespace VowelAServer.Server
 
         static void Main(string[] args)
         {
-            // Make sure that Gameplay has been started
+            // Make sure that Gameplay has been started, TODO: any better way?
             var runner = new Runner();
             
             InitTickables();

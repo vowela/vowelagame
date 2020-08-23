@@ -6,9 +6,9 @@ namespace VowelAServer.Gameplay.Debugging.ConsoleCommands
     {
         public string GroupName { get; set; } = "Auth";
         
-        public static void Register(string data)
+        public static void TestCommand(string data)
         {
-            Logger.WriteError("Someone joined here");
+            Logger.WriteError("Test");
         }
 
     }

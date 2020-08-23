@@ -4,6 +4,7 @@ using ENet;
 using VowelAServer.Server.Models;
 using VowelAServer.Shared.Models.Dtos;
 using VowelAServer.Db.Services;
+using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Utils;
 using VowelAServer.Shared.Data.Enums;
 using VowelAServer.Shared.Models;
@@ -45,18 +46,18 @@ namespace VowelAServer.Server.Controllers
             return UserService.CreateUser(userToAdd);
         }
 
-        [RPC]
-        public static void Register(Player player, UserDto user)
+        [RPC] public static void Register(Player player, UserDto user)
         {
             var registerResult = TryRegister(user);
             RPC(player.NetPeer, "AuthController", "OnRegistered", registerResult);
         }
 
         /// <summary> Remove user's sid from database, clear player registration, unauthorize user </summary>
-        [RPC]
-        public static void Logout(Player player)
+        [RPC] public static void Logout(Player player)
         {
             var playerSId  = player.GetSId();
+
+            ChatManager.SendToAll(player, "Пока сучары!");
             
             var user       = UserService.GetUserBySID(playerSId);
             user.SessionID = Guid.Empty;
@@ -65,8 +66,7 @@ namespace VowelAServer.Server.Controllers
             RPC(player.NetPeer, "AuthController", "OnAuthorized", (AuthResult.Unauthorized, Guid.Empty));
         }
 
-        [RPC]
-        public static void Login(Player player, UserDto user)
+        [RPC] public static void Login(Player player, UserDto user)
         {
             var userData = TryLogin(user);
             // Check session, update id if it's expired/not exists
@@ -74,6 +74,8 @@ namespace VowelAServer.Server.Controllers
             if (userData != null && userData.SessionID != Guid.Empty)
             {
                 player.Register(userData.SessionID);
+                
+                ChatManager.SendToAll(player, "Вечер в хату!");
                 RPC(player.NetPeer, "AuthController", "OnAuthorized", (AuthResult.Authorized, userData.SessionID));
             }
             else
@@ -82,14 +84,15 @@ namespace VowelAServer.Server.Controllers
             }
         }
 
-        [RPC]
-        public static void LoginSession(Player player, Guid sessionId)
+        [RPC] public static void LoginSession(Player player, Guid sessionId)
         {
             var userData = UserService.GetUserBySID(sessionId);
             if (userData != null)
             {
                 if (userData.SessionID == Guid.Empty) RenewSID(userData);
                 player.Register(userData.SessionID);
+                
+                ChatManager.SendToAll(player, "Вечер в хату!");
             }
             RPC(player.NetPeer, "AuthController", "OnAuthorized",
                 userData != null ? (AuthResult.Authorized, userData.SessionID) : (AuthResult.Unauthorized, Guid.Empty));

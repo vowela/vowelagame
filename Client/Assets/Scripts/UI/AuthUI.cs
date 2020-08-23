@@ -1,28 +1,39 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VowelAServer.Shared.Models.Dtos;
 using VowelAServer.Shared.Networking;
 
+public enum AuthState
+{
+    Connecting,
+    Disconnected,
+    LoggingIn,
+    Connected
+}
+
 public class AuthUI : MonoBehaviour
 {
+    public static AuthUI obj;
+
+    public Text ConnectingMessage;
+    public GameObject ConnectingUI;
     public GameObject LoginUI;
     public GameObject MenuUI;
-    
-    public Button LoginButton;
-    
+
     public bool AllowAutoLogin;
 
     private string login;
     private string password;
+    private AuthState currentState = AuthState.Connecting;
 
+    private void Awake() { obj = this; }
+    
     private void Start()
     {
         AuthController.AuthorizationNotify += result =>
         {
-            if (result == AuthResult.Authorized) HideAuthWindow();
+            if (result == AuthResult.Authorized)        HideAuthWindow();
             else if (result == AuthResult.Unauthorized) ShowAuthWindow();
         };
     }
@@ -41,15 +52,36 @@ public class AuthUI : MonoBehaviour
 
     private void Update()
     {
-        // Auth with session ID if allowed
-        if (ConnectionManager.IsConnected && AllowAutoLogin)
+        if (!ConnectionManager.IsConnected && currentState != AuthState.Connecting)
         {
-            LoginSession();
-            AllowAutoLogin = false;
+            ConnectingMessage.text = "Disconnected";
+            currentState = AuthState.Disconnected;
         }
-        // Disable/enable login buttons with connection to server
-        if (ConnectionManager.IsConnected && !LoginButton.IsInteractable())      LoginButton.interactable = true;
-        else if (!ConnectionManager.IsConnected && LoginButton.IsInteractable()) LoginButton.interactable = false;
+        else if (ConnectionManager.IsConnected && (currentState == AuthState.Disconnected || currentState == AuthState.Connecting))
+        {
+            ConnectingMessage.text = "Connected";
+            currentState = AuthState.Connected;
+        }
+
+        switch (currentState)
+        {
+            // Disable/enable login buttons with connection to server
+            case AuthState.Connected when AllowAutoLogin:
+                ConnectingMessage.text = "Authorizing..";
+                var result = LoginSession();
+                AllowAutoLogin = false;
+                if (result) currentState = AuthState.LoggingIn;
+                break;
+            case AuthState.Connected when !LoginUI.activeSelf:
+                currentState = AuthState.LoggingIn;
+                ConnectingUI.SetActive(false);
+                LoginUI.SetActive(true);
+                break;
+            case AuthState.Disconnected when LoginUI.activeSelf:
+                ConnectingUI.SetActive(true);
+                LoginUI.SetActive(false);
+                break;
+        }
     }
 
     /// <summary> Send logout request </summary>
@@ -66,11 +98,12 @@ public class AuthUI : MonoBehaviour
     }
     
     /// <summary> Send login request with session ID </summary>
-    private void LoginSession()
+    private bool LoginSession()
     {
-        if (!PlayerPrefs.HasKey(AuthController.SessionID)) return;
+        if (!PlayerPrefs.HasKey(AuthController.SessionID)) return false;
         var sessionIdStr = PlayerPrefs.GetString(AuthController.SessionID);
         if (Guid.TryParse(sessionIdStr, out var sessionId)) StaticNetworkComponent.RPC("AuthController", "LoginSession", sessionId);
+        return true;
     }
 
     /// <summary> Send register request with login data </summary>

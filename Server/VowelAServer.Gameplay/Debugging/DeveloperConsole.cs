@@ -29,8 +29,7 @@ namespace VowelAServer.Gameplay.Debugging
             }
         }
         
-        [RPC]
-        public static void ProcessCommand(Player player, string groupName, string commandName, params object[] args)
+        [RPC] public static void ProcessCommand(Player player, string groupName, string commandName, params object[] args)
         {
             if (commands.TryGetValue((groupName.ToUpper(), commandName.ToUpper()), out var commandInfo))
                 commandInfo.Invoke(null, args);

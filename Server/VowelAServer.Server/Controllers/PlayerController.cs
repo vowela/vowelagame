@@ -8,8 +8,7 @@ namespace VowelAServer.Server.Controllers
 {
     public class PlayerController : StaticNetworkObject
     {
-        [RPC]
-        public static void GetPlayerData(Player player)
+        [RPC] public static void GetPlayerData(Player player)
         {
             if (!player.IsRegistered) return;
             
@@ -17,8 +16,7 @@ namespace VowelAServer.Server.Controllers
             RPC("PlayerController", "SetPlayerData", playerProfile);
         }
 
-        [RPC]
-        public static void SetPlayerData(Player player, PlayerProfile playerProfile)
+        [RPC] public static void SetPlayerData(Player player, PlayerProfile playerProfile)
         {
             if (!player.IsRegistered) return;
 

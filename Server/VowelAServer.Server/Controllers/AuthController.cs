@@ -70,9 +70,9 @@ namespace VowelAServer.Server.Controllers
         {
             var userData = TryLogin(user);
             // Check session, update id if it's expired/not exists
-            if (userData != null && userData.SessionID == Guid.Empty) RenewSID(userData);
-            if (userData != null && userData.SessionID != Guid.Empty)
+            if (userData != null)
             {
+                RenewSID(userData);
                 player.Register(userData.SessionID);
                 
                 ChatManager.SendToAll(player, "Вечер в хату!");
@@ -89,7 +89,7 @@ namespace VowelAServer.Server.Controllers
             var userData = UserService.GetUserBySID(sessionId);
             if (userData != null)
             {
-                if (userData.SessionID == Guid.Empty) RenewSID(userData);
+                RenewSID(userData);
                 player.Register(userData.SessionID);
                 
                 ChatManager.SendToAll(player, "Вечер в хату!");

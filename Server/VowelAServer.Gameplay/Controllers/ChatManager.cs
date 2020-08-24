@@ -31,7 +31,7 @@ namespace VowelAServer.Gameplay.Controllers
         {
             Messages ??= new List<ChatMessage>();
             var newChatHistory = new ChatHistory {Messages = Messages.SkipLast(offset).TakeLast(count).ToList()};
-            RPC("ChatController", "SetMessagesFromHistory", newChatHistory);
+            RPC(player.NetPeer, "ChatController", "SetMessagesFromHistory", newChatHistory);
         }
     }
 }

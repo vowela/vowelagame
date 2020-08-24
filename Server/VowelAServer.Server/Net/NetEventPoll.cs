@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ENet;
 using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Controllers;
@@ -14,6 +18,28 @@ namespace VowelAServer.Server.Net
 {
     public static class NetEventPoll
     {
+        public static Queue<Event> EventPoll = new Queue<Event>();
+
+        static NetEventPoll()
+        {
+            const int delay             = 1;
+            var cancellationTokenSource = new CancellationTokenSource();
+            var token                   = cancellationTokenSource.Token;
+            
+            var listener = Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    // poll hardware
+                    CheckEventPoll();
+
+                    Thread.Sleep(delay);
+                    if (token.IsCancellationRequested)
+                        break;
+                }
+            }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        }
+
         public static void CheckPoll()
         {
             var polled = false;
@@ -27,45 +53,59 @@ namespace VowelAServer.Server.Net
 
                     polled = true;
                 }
+                lock (EventPoll) EventPoll.Enqueue(eNetEvent);
+            }
+        }
 
-                NetworkEvent networkEvent;
-                switch (eNetEvent.Type)
+        public static void CheckEventPoll()
+        {
+            lock (EventPoll)
+            {
+                for (var i = 0; i < EventPoll.Count; i++)
                 {
-                    case EventType.Connect:
-                        Logger.Write("Client connected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
-                        eNetEvent.Peer.Timeout(32, 1000, 4000);
-                        break;
-                    case EventType.Timeout:
-                        Logger.Write("Client timeout - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
-                        networkEvent = NetworkEvent.DisconnectReason;
-                        break;
-                    case EventType.Disconnect:
-                        Logger.Write("Client disconnected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
-                        networkEvent = NetworkEvent.DisconnectReason;
-                        break;
-                    case EventType.Receive:
-                        //Logger.Write("Packet received from - ID: " + netEvent.Peer.ID + ", IP: " + netEvent.Peer.IP + ", Channel ID: " + netEvent.ChannelID + ", Data length: " + netEvent.Packet.Length
-                        var readBuffer = new byte[eNetEvent.Packet.Length];
-                        var readStream = new MemoryStream(readBuffer);
-                        var reader = new BinaryReader(readStream);
+                    var eNetEvent = EventPoll.Dequeue();
 
-                        readStream.Position = 0;
-                        eNetEvent.Packet.CopyTo(readBuffer);
+                    NetworkEvent networkEvent;
+                    switch (eNetEvent.Type)
+                    {
+                        case EventType.Connect:
+                            Logger.Write("Client connected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
+                            eNetEvent.Peer.Timeout(32, 1000, 4000);
+                            break;
+                        case EventType.Timeout:
+                            Logger.Write("Client timeout - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
+                            networkEvent = NetworkEvent.DisconnectReason;
+                            break;
+                        case EventType.Disconnect:
+                            Logger.Write(
+                                "Client disconnected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
+                            networkEvent = NetworkEvent.DisconnectReason;
+                            break;
+                        case EventType.Receive:
+                            //Logger.Write("Packet received from - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP + ", Channel ID: " + eNetEvent.ChannelID + ", Data length: " + eNetEvent.Packet.Length);
+                            var readBuffer = new byte[eNetEvent.Packet.Length];
+                            var readStream = new MemoryStream(readBuffer);
+                            var reader     = new BinaryReader(readStream);
 
-                        var player = (Guid.TryParse(reader.ReadString(), out var sid)
-                            ? Player.GetPlayerBySID(sid)
-                            : null) ?? Player.Undefined(eNetEvent.Peer);
-                        
-                        networkEvent = (NetworkEvent)reader.ReadByte();
-                        
-                        if (networkEvent == NetworkEvent.RPCStatic) CallRpcMethod(player, reader);
-                        else if (networkEvent == NetworkEvent.RPC)  CallObjectRpcMethod(player, reader);
+                            readStream.Position = 0;
+                            eNetEvent.Packet.CopyTo(readBuffer);
 
-                        break;
+                            var player = (Guid.TryParse(reader.ReadString(), out var sid)
+                                ? Player.GetPlayerBySID(sid)
+                                : null) ?? Player.Undefined(eNetEvent.Peer);
+                            player.NetPeer = eNetEvent.Peer;
+
+                            networkEvent = (NetworkEvent) reader.ReadByte();
+
+                            if (networkEvent == NetworkEvent.RPCStatic) CallRpcMethod(player, reader);
+                            else if (networkEvent == NetworkEvent.RPC)  CallObjectRpcMethod(player, reader);
+
+                            break;
+                    }
+
+                    if (eNetEvent.Type == EventType.Receive)
+                        eNetEvent.Packet.Dispose();
                 }
-
-                if (eNetEvent.Type == EventType.Receive)
-                    eNetEvent.Packet.Dispose();
             }
         }
 

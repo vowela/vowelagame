@@ -5,4 +5,10 @@ namespace VowelAServer.Shared.Networking
         Unauthorized,
         Authorized
     }
+
+    public enum RegisterResult
+    {
+        Registered,
+        AuthDataNotValid
+    }
 }

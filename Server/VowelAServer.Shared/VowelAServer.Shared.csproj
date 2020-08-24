@@ -7,30 +7,16 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <CustomCommands>
-      <CustomCommands>
-        <Command>
-          <type>AfterBuild</type>
-          <command>COPY "${TargetDir}/${ProjectName}.dll" "${SolutionDir}/../Client/Assets/Shared/"</command>
-        </Command>
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType></DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MacOS|AnyCPU' ">
-    <CustomCommands>
-      <CustomCommands>
-        <Command>
-          <type>AfterBuild</type>
-          <command>cp "${TargetDir}/${ProjectName}.dll" "${SolutionDir}/../Client/Assets/Shared/"</command>
-        </Command>
-      </CustomCommands>
-    </CustomCommands>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Exec Command="COPY &quot;$(TargetDir)/$(ProjectName).dll&quot; &quot;$(SolutionDir)/../Client/Assets/Shared/&quot;" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'MacOS|AnyCPU' ">
+    <Exec Command="cp &quot;$(TargetDir)/$(ProjectName).dll&quot; &quot;$(SolutionDir)/../Client/Assets/Shared/&quot;" />
   </Target>
 </Project>

@@ -10,7 +10,7 @@ namespace VowelAServer.Gameplay.Controllers
         
         public WorldSimulation()
         {
-            WorldTime.Instance().Start(WorldTime.GetSavedTime());
+            //WorldTime.Instance().Start(WorldTime.GetSavedTime());
         }
 
         public void Tick()

@@ -32,6 +32,8 @@ namespace VowelAServer.Server.Models
         
         public void Register(Guid sessionId)
         {
+            if (this.sessionId != Guid.Empty && sidPlayers.ContainsKey(this.sessionId))
+                sidPlayers.Remove(this.sessionId);
             this.sessionId        = sessionId;
             sidPlayers[sessionId] = this;
         }

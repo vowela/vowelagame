@@ -40,14 +40,14 @@ public class AuthUI : MonoBehaviour
         {
             ConnectingMessage.text = "Disconnected";
             currentState = AuthState.Disconnected;
-            ChangeAuthState();
         }
         else if (ConnectionManager.IsConnected && (currentState == AuthState.Disconnected || currentState == AuthState.Connecting))
         {
             ConnectingMessage.text = "Connected";
             currentState = AuthState.Connected;
-            ChangeAuthState();
         }
+
+        ChangeAuthState();
     }
 
     private void ChangeAuthState()
@@ -57,10 +57,13 @@ public class AuthUI : MonoBehaviour
         {
             case AuthState.Connected when AllowAutoLogin:
                 // Auth with Session ID saved (because of auto login)
-                ConnectingMessage.text = "Authorizing..";
                 var result = LoginSession();
                 AllowAutoLogin = false;
-                if (result) currentState = AuthState.LoggingIn;
+                if (result)
+                {
+                    ConnectingMessage.text = "Authorizing..";
+                    currentState = AuthState.LoggingIn;
+                }
                 break;
             case AuthState.Connected when !LoginUI.activeSelf:
                 // Show LoginUI if it's disabled, but connected to server

@@ -77,12 +77,11 @@ namespace VowelAServer.Server.Net
                             networkEvent = NetworkEvent.DisconnectReason;
                             break;
                         case EventType.Disconnect:
-                            Logger.Write(
-                                "Client disconnected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
+                            Logger.Write("Client disconnected - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP);
                             networkEvent = NetworkEvent.DisconnectReason;
                             break;
                         case EventType.Receive:
-                            //Logger.Write("Packet received from - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP + ", Channel ID: " + eNetEvent.ChannelID + ", Data length: " + eNetEvent.Packet.Length);
+                            Logger.Write("Packet received from - ID: " + eNetEvent.Peer.ID + ", IP: " + eNetEvent.Peer.IP + ", Channel ID: " + eNetEvent.ChannelID + ", Data length: " + eNetEvent.Packet.Length);
                             var readBuffer = new byte[eNetEvent.Packet.Length];
                             var readStream = new MemoryStream(readBuffer);
                             var reader     = new BinaryReader(readStream);

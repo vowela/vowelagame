@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VowelAServer.Shared.Gameplay;
+using RPC = VowelAServer.Shared.Models.RPC;
 
 public class ClientChatMessage : ChatMessage
 {
@@ -30,8 +32,24 @@ public class ChatUI : MonoBehaviour
     {
         if (ChatBox.text != "" && Input.GetKeyDown(KeyCode.Return))
         {
-            SendMessageToServer(ChatBox.text);
+            var text = ChatBox.text;
             ChatBox.text = "";
+            
+            // Process developer command
+            if (text.StartsWith("/"))
+            {
+                var devCommand = text.Split(' ');
+                if (devCommand.Length >= 2)
+                {
+                    var groupName   = devCommand[0].Remove(0, 1);
+                    var commandName = devCommand[1];
+                    var arguments   = devCommand.Length > 2 ? devCommand[2].Split(',') : new string[] {};
+                    StaticNetworkComponent.RPC("DeveloperConsole", "ProcessCommand", groupName, commandName, arguments);
+                    return;
+                }
+            }
+
+            SendMessageToServer(text);
         }
     }
 

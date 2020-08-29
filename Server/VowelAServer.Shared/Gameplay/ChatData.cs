@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using VowelAServer.Shared.Models;
+using VowelAServer.Shared.Models.Multiplayer;
 
 namespace VowelAServer.Shared.Gameplay
 {

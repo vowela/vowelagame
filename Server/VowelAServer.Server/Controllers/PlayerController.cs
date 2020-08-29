@@ -2,6 +2,7 @@ using VowelAServer.Db.Services;
 using VowelAServer.Server.Models;
 using VowelAServer.Server.Utils;
 using VowelAServer.Shared.Models;
+using VowelAServer.Shared.Models.Multiplayer;
 using VowelAServer.Utilities.Network;
 
 namespace VowelAServer.Server.Controllers

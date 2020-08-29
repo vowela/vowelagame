@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using ENet;
 using VowelAServer.Shared.Networking;
 using VowelAServer.Utilities.Helpers;

@@ -13,14 +13,12 @@ public class AuthController : StaticNetworkComponent
     public delegate void AuthorizationHandler(AuthResult result);
     public static event AuthorizationHandler AuthorizationNotify;
 
-    [RPC]
-    public static void OnRegistered(bool isRegistered)
+    [RPC] public static void OnRegistered(bool isRegistered)
     {
         Debug.Log(isRegistered ? "Registered new account" : "Can't register, try again");
     }
     
-    [RPC]
-    public static void OnAuthorized((AuthResult result, Guid sessionId) authResult)
+    [RPC] public static void OnAuthorized((AuthResult result, Guid sessionId) authResult)
     {
         if (authResult.result == AuthResult.Unauthorized || authResult.sessionId == Guid.Empty)
         {

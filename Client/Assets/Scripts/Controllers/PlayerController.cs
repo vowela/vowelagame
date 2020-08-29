@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using VowelAServer.Shared.Interfaces;
-using VowelAServer.Shared.Models;
+using VowelAServer.Shared.Models.Multiplayer;
 using RPC = VowelAServer.Shared.Models.RPC;
 
 public class Player : SingletonController<Player>

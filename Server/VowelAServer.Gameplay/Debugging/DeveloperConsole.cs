@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using VowelAServer.Server.Models;
 using VowelAServer.Shared.Models;
@@ -31,8 +32,18 @@ namespace VowelAServer.Gameplay.Debugging
         
         [RPC] public static void ProcessCommand(Player player, string groupName, string commandName, params object[] args)
         {
-            if (commands.TryGetValue((groupName.ToUpper(), commandName.ToUpper()), out var commandInfo))
-                commandInfo.Invoke(null, args);
+            if (commands.TryGetValue((groupName.ToUpper(), commandName.ToUpper()), out var method))
+            {
+                // If arguments count not exact, pass player at the first argument
+                if (method.GetParameters().Length != args.Length)
+                {
+                    var arguments = args.ToList();
+                    arguments.Insert(0, player);
+                    args = arguments.ToArray();
+                }
+                
+                method.Invoke(null, args);
+            }
         }
     }
 }

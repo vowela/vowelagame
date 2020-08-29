@@ -1,7 +1,7 @@
 ﻿using System;
 using LiteDB;
-using VowelAServer.Server.Models;
 using VowelAServer.Shared.Models;
+using VowelAServer.Shared.Models.Multiplayer;
 
 namespace VowelAServer.Db.Services
 {

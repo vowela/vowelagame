@@ -135,13 +135,9 @@ namespace VowelAServer.Server.Net
             if (RPCManager.RPCMethods.TryGetValue((targetName, methodName), out var method))
             {
                 // If arguments count not exact, pass player at the first argument
-                if (method.GetParameters().Length == arguments.Count)
-                    method.Invoke(caller, arguments.ToArray());
-                else
-                {
+                if (method.GetParameters().Length != arguments.Count)
                     arguments.Insert(0, player);
-                    method.Invoke(caller, arguments.ToArray());
-                }
+                method.Invoke(caller, arguments.ToArray());
             }
         }
     }

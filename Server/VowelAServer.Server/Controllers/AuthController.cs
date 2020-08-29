@@ -8,6 +8,7 @@ using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Utils;
 using VowelAServer.Shared.Data.Enums;
 using VowelAServer.Shared.Models;
+using VowelAServer.Shared.Models.Multiplayer;
 using VowelAServer.Shared.Networking;
 using VowelAServer.Utilities.Logging;
 using VowelAServer.Utilities.Network;
@@ -57,8 +58,6 @@ namespace VowelAServer.Server.Controllers
         {
             var playerSId  = player.GetSId();
 
-            ChatManager.SendToAll(player, "Пока сучары!");
-            
             var user       = UserService.GetUserBySID(playerSId);
             user.SessionID = Guid.Empty;
             UserService.UpdateUserData(user);
@@ -75,7 +74,6 @@ namespace VowelAServer.Server.Controllers
                 RenewSID(userData);
                 player.Register(userData.SessionID);
                 
-                ChatManager.SendToAll(player, "Вечер в хату!");
                 RPC(player.NetPeer, "AuthController", "OnAuthorized", (AuthResult.Authorized, userData.SessionID));
             }
             else
@@ -91,8 +89,6 @@ namespace VowelAServer.Server.Controllers
             {
                 RenewSID(userData);
                 player.Register(userData.SessionID);
-                
-                ChatManager.SendToAll(player, "Вечер в хату!");
             }
             RPC(player.NetPeer, "AuthController", "OnAuthorized",
                 userData != null ? (AuthResult.Authorized, userData.SessionID) : (AuthResult.Unauthorized, Guid.Empty));

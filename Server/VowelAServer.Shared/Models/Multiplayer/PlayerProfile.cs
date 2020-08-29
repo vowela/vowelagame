@@ -1,6 +1,6 @@
 using System;
 
-namespace VowelAServer.Shared.Models
+namespace VowelAServer.Shared.Models.Multiplayer
 {
     [Serializable]
     public class PlayerProfile

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using VowelAServer.Shared.Data.Enums;
 
-namespace VowelAServer.Server.Models
+namespace VowelAServer.Shared.Models.Multiplayer
 {
     public class User
     {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VowelAServer.Db.Services;
 using VowelAServer.Server.Models;
 using VowelAServer.Shared.Models;
 using VowelAServer.Shared.Models.Multiplayer;
@@ -13,9 +14,9 @@ namespace VowelAServer.Gameplay.Controllers
     /// </summary>
     public class RoomsController : StaticNetworkObject
     {
-        public static Queue<Room> AvailableRooms           = new Queue<Room>();   // New rooms appear here
-        public static Dictionary<string, Room> ClosedRooms = new Dictionary<string, Room>();   // Closed rooms goes here, after finishing match the room should be removed
-        private const byte DefaultMaxPlayersInRoom = 2;
+        public static Dictionary<string, Room> Rooms = new Dictionary<string, Room>();   // Whole rooms list
+        public static Queue<Room> AvailableRooms     = new Queue<Room>();                // New rooms appear here
+        private const byte DefaultMaxPlayersInRoom   = 2;
         
         // Create a room with specified name and parameters
         private static Room CreateRoom(string name)
@@ -27,6 +28,7 @@ namespace VowelAServer.Gameplay.Controllers
                 MaxPlayersAmount = DefaultMaxPlayersInRoom
             };
             AvailableRooms.Enqueue(newRoom);
+            Rooms[newRoom.Name] = newRoom;
             return newRoom;
         }
 
@@ -34,7 +36,16 @@ namespace VowelAServer.Gameplay.Controllers
         private static Room FindAvailableRoom(Player player)
         {
             // Firstly, find a room a player could be connected to
-            if (player.ConnectedRoom != null) return player.ConnectedRoom;
+            var playerProfile = UserService.GetPlayerProfileBySID(player.GetSId());
+            if (playerProfile?.ConnectedRoomName != null)
+            {
+                if (Rooms.ContainsKey(playerProfile.ConnectedRoomName))
+                    return Rooms[playerProfile.ConnectedRoomName];
+
+                // If no room with saved name found, then erase it from player profile
+                playerProfile.ConnectedRoomName = "";
+                UserService.UpdatePlayerProfileData(playerProfile);
+            }
 
             // If we're not connected to any room, try to find an empty room
             if (AvailableRooms.Any() && AvailableRooms.TryPeek(out var availableRoom)) return availableRoom;
@@ -46,24 +57,25 @@ namespace VowelAServer.Gameplay.Controllers
         private static void JoinPlayerToRoom(Player player, Room room)
         {
             room.ConnectedPlayers.Add(player.Id);
-            player.ConnectedRoom = room;
-            if (room.ConnectedPlayers.Count >= room.MaxPlayersAmount)
+            // Update connected room name in player's profile
+            var playerProfile = UserService.GetPlayerProfileBySID(player.GetSId());
+            if (playerProfile != null)
             {
-                AvailableRooms.Dequeue();
-                ClosedRooms[room.Name] = room;
+                playerProfile.ConnectedRoomName = room.Name;
+                UserService.UpdatePlayerProfileData(playerProfile);
             }
+            // Remove from availability
+            if (room.IsClosed) AvailableRooms.Dequeue();
             // Send player a request for joining the available room
             RPC(player.NetPeer, "RoomsController", "JoinedRoom", room);
         }
         
         [RPC] public static void CreateRoomManually(string name) => CreateRoom(name);
-        
-        public static void DestroyRoom(string roomName) => ClosedRooms.Remove(roomName);
 
-        // If the player connected to any rooms, try connecting to them 
-        [RPC] public static void GetRoomTryJoin(Player player)
+        // Room could be destroyed only if it's already closed
+        public static void DestroyRoom(string roomName)
         {
-            if (player.ConnectedRoom != null) JoinPlayerToRoom(player, player.ConnectedRoom);
+            if (Rooms.TryGetValue(roomName, out var room) && room.IsClosed) Rooms.Remove(roomName);
         }
 
         // Find an empty room, if there's no available rooms - create new
@@ -73,6 +85,20 @@ namespace VowelAServer.Gameplay.Controllers
             // Join player to available room
             if (availableRoom != null) JoinPlayerToRoom(player, availableRoom);
             else RPC(player.NetPeer, "RoomsController", "JoinedRoom", null);
+        }
+
+        [RPC] public static void TryLeaveRoom(Player player)
+        {
+            var playerProfile = UserService.GetPlayerProfileBySID(player.GetSId());
+            if (playerProfile != null && playerProfile.ConnectedRoomName != string.Empty)
+            {
+                // Remove player from its room
+                if (Rooms.ContainsKey(playerProfile.ConnectedRoomName))
+                    Rooms[playerProfile.ConnectedRoomName].ConnectedPlayers.Remove(player.Id);
+                // Destroy info from player's profile
+                playerProfile.ConnectedRoomName = string.Empty;
+                UserService.UpdatePlayerProfileData(playerProfile);
+            }
         }
     }
 }

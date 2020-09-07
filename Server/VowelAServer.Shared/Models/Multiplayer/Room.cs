@@ -9,5 +9,6 @@ namespace VowelAServer.Shared.Models.Multiplayer
         public string Name                          { get; set; }
         public byte MaxPlayersAmount                { get; set; }
         public HashSet<int> ConnectedPlayers        { get; set; }
+        public bool IsClosed => ConnectedPlayers.Count >= MaxPlayersAmount;
     }
 }

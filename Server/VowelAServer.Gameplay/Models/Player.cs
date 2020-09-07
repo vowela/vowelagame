@@ -12,7 +12,6 @@ namespace VowelAServer.Server.Models
 
         public int Id;
         public Peer NetPeer;
-        public Room ConnectedRoom;
         
         public bool IsRegistered => sessionId != Guid.Empty;
 

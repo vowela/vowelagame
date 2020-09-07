@@ -17,6 +17,11 @@ public class RoomsController : StaticNetworkComponent
         else              OnConnectedToRoom?.Invoke(room);
     }
 
+    public static void LeaveRoom()
+    {
+        RPC("RoomsController", "TryLeaveRoom");
+    }
+
     public static void StartRoomSearch()
     {
         RPC("RoomsController", "TryJoinRoom");

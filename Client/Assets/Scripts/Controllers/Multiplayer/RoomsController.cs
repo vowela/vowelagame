@@ -1,18 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using VowelAServer.Shared.Models;
+﻿using UnityEngine.Events;
 using VowelAServer.Shared.Models.Multiplayer;
+using RPC = VowelAServer.Shared.Models.RPC;
+
+public class RoomEvent : UnityEvent<Room> { }
 
 public class RoomsController : StaticNetworkComponent
 {
-    [VowelAServer.Shared.Models.RPC] public static void OnRoomCreated()
-    {
-        
-    }
+    public static UnityEvent OnStopRoomSearch = new UnityEvent();
     
-    [VowelAServer.Shared.Models.RPC] public static void UpdateRoomsList(List<Room> rooms)
+    public static RoomEvent OnConnectedToRoom = new RoomEvent();
+
+    // Alert everything that we've just accepted connecting to room
+    [RPC] public static void JoinedRoom(Room room)
     {
-        Debug.Log(rooms.Count);
+        if (room == null) OnStopRoomSearch?.Invoke();
+        else              OnConnectedToRoom?.Invoke(room);
+    }
+
+    public static void StartRoomSearch()
+    {
+        RPC("RoomsController", "TryJoinRoom");
     }
 }

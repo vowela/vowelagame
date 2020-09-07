@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using VowelAServer.Shared.Interfaces;
 using VowelAServer.Shared.Models.Multiplayer;
 using RPC = VowelAServer.Shared.Models.RPC;
 
 public class Player : SingletonController<Player>
 {
-    public delegate void PlayerDataHandler();
-    public event PlayerDataHandler PlayerDataChanged;
+    public UnityEvent PlayerDataChanged = new UnityEvent();
     
     public PlayerProfile Profile;
 

@@ -1,0 +1,85 @@
+﻿using LiteDB;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using VowelAServer.Db.Services;
+using VowelAServer.Shared.Models.Db;
+
+namespace VowelAServer.Db.DbParser
+{
+    public class DbViwer
+    {
+        private LiteDatabase db;
+
+        public DbViwer(string dbPath)
+        {
+            db = new LiteDatabase(dbPath);
+        }
+
+        /// <summary>
+        /// Returns names of all collections in the db.
+        /// </summary>
+        public IEnumerable<string> GetCollectionNames()
+        {
+            return db.GetCollectionNames();
+        }
+
+        /// <summary>
+        /// Returns rows of a collection.
+        /// </summary>
+        public List<Row> GetAllItemsInCollection(string name)
+        {
+            var collection = db.GetCollection(name);
+
+            var docs = collection.FindAll();
+
+            var rows = new List<Row>();
+
+            foreach (var doc in docs)
+            {
+                var elements = doc.GetElements();
+
+                var row = new Row()
+                {
+                    // '_id' element is the first in the result of GetElements()
+                    Id = elements.ToList()[0].Value.ToString()
+                };
+
+                foreach (var el in elements)
+                {
+                    var item = new Item()
+                    {
+                        Key = el.Key,
+                        Value = el.Value.ToString(),
+                        Type = el.Value.Type,
+                    };
+
+                    row.Items.Add(item);
+                }
+
+                rows.Add(row);
+            }
+
+            return rows;
+        }
+
+        public void UpsertItemInCollection(string collectionName, Row row)
+        {
+            var collection = db.GetCollection(collectionName);
+
+            var dic = new Dictionary<string, BsonValue>();
+
+            foreach (var item in row.Items)
+            {
+                var converted = Convert.ChangeType(item.Value, item.BsonTypeToTypeCode());
+
+                var value = new BsonValue(converted);
+
+                dic.Add(item.Key, value);
+            }
+
+            collection.Upsert(new BsonDocument(dic));
+        }
+    }
+}

@@ -19,7 +19,4 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'MacOS|AnyCPU' ">
     <Exec Command="cp &quot;$(TargetDir)/$(ProjectName).dll&quot; &quot;$(SolutionDir)/../Client/Assets/Shared/&quot;" />
   </Target>
-  <ItemGroup>
-    <PackageReference Include="LiteDB" Version="5.0.7" />
-  </ItemGroup>
 </Project>

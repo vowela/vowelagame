@@ -52,7 +52,7 @@ namespace VowelAServer.Db.DbParser
                     {
                         Key = el.Key,
                         Value = el.Value.ToString(),
-                        Type = el.Value.Type,
+                        Type = BsonTypeToTypeCode(el.Value.Type),
                     };
 
                     row.Items.Add(item);
@@ -72,7 +72,7 @@ namespace VowelAServer.Db.DbParser
 
             foreach (var item in row.Items)
             {
-                var converted = Convert.ChangeType(item.Value, item.BsonTypeToTypeCode());
+                var converted = Convert.ChangeType(item.Value, item.Type);
 
                 var value = new BsonValue(converted);
 
@@ -80,6 +80,25 @@ namespace VowelAServer.Db.DbParser
             }
 
             collection.Upsert(new BsonDocument(dic));
+        }
+
+        private static TypeCode BsonTypeToTypeCode(BsonType type)
+        {
+            switch (type)
+            {
+                case BsonType.Boolean:
+                    return TypeCode.Boolean;
+                case BsonType.Int32:
+                    return TypeCode.Int32;
+                case BsonType.Double:
+                    return TypeCode.Double;
+                case BsonType.DateTime:
+                    return TypeCode.DateTime;
+                case BsonType.String:
+                    return TypeCode.String;
+                default:
+                    return TypeCode.Object;
+            }
         }
     }
 }

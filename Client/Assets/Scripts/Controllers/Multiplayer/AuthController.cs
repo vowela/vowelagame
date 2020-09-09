@@ -34,4 +34,8 @@ public class AuthController : StaticNetworkComponent
         Debug.Log("SID saved, player logged in");
         AuthorizationNotify?.Invoke(AuthResult.Authorized);
     }
+
+    public static void Logout()                     => RPC("AuthController", "Logout");
+    public static void Login(UserDto userDto)       => RPC("AuthController", "Login", userDto);
+    public static void LoginSession(Guid sessionId) => RPC("AuthController", "LoginSession", sessionId);
 }

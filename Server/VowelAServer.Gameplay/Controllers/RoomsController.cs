@@ -24,8 +24,9 @@ namespace VowelAServer.Gameplay.Controllers
             var newRoom = new Room
             {
                 Name             = name, 
-                ConnectedPlayers = new HashSet<int>(),
-                MaxPlayersAmount = DefaultMaxPlayersInRoom
+                ConnectedPlayers = new List<int>(),
+                MaxPlayersAmount = DefaultMaxPlayersInRoom,
+                Teams            = new List<RoomTeam> { new RoomTeam(), new RoomTeam() }
             };
             AvailableRooms.Enqueue(newRoom);
             Rooms[newRoom.Name] = newRoom;
@@ -56,18 +57,50 @@ namespace VowelAServer.Gameplay.Controllers
         // Add player to room, close the room if need
         private static void JoinPlayerToRoom(Player player, Room room)
         {
-            room.ConnectedPlayers.Add(player.Id);
-            // Update connected room name in player's profile
-            var playerProfile = UserService.GetPlayerProfileBySID(player.GetSId());
-            if (playerProfile != null)
+            if (!room.ConnectedPlayers.Contains(player.Id))
             {
-                playerProfile.ConnectedRoomName = room.Name;
-                UserService.UpdatePlayerProfileData(playerProfile);
+                room.ConnectedPlayers.Add(player.Id);
+                // Update connected room name in player's profile
+                var playerProfile = UserService.GetPlayerProfileBySID(player.GetSId());
+                if (playerProfile != null)
+                {
+                    playerProfile.ConnectedRoomName = room.Name;
+                    UserService.UpdatePlayerProfileData(playerProfile);
+                }
+
+                // Remove from availability
+                if (room.IsClosed) AvailableRooms.Dequeue();
             }
-            // Remove from availability
-            if (room.IsClosed) AvailableRooms.Dequeue();
+
             // Send player a request for joining the available room
             RPC(player.NetPeer, "RoomsController", "JoinedRoom", room);
+        }
+        
+        /// <summary> Send player profiles connected to concrete team </summary>
+        private static void UpdateTeamListForPlayer(Player player, Room room)
+        {
+            // Update all teams on player
+            for (var teamId = 0; teamId < room.Teams.Count; teamId++)
+            {
+                var playerProfileList = room.Teams[teamId].PlayersInTeam.Select(UserService.GetPlayerProfileById).ToList();
+                RPC(player.NetPeer, "RoomsController", "TeamListUpdated", teamId, playerProfileList);
+            }
+        }
+        
+        /// <summary> Check if player is connected to any room which exists, if not - remove room from its records</summary>
+        public static PlayerProfile ActualizePlayerProfile(PlayerProfile playerProfile, int playerId)
+        {
+            if (!string.IsNullOrEmpty(playerProfile.ConnectedRoomName))
+            {
+                if (Rooms.TryGetValue(playerProfile.ConnectedRoomName, out var room) && room.ConnectedPlayers.Contains(playerId)) { }
+                else
+                {
+                    playerProfile.ConnectedRoomName = string.Empty;
+                    UserService.UpdatePlayerProfileData(playerProfile);
+                }
+            }
+
+            return playerProfile;
         }
         
         [RPC] public static void CreateRoomManually(string name) => CreateRoom(name);
@@ -94,10 +127,44 @@ namespace VowelAServer.Gameplay.Controllers
             {
                 // Remove player from its room
                 if (Rooms.ContainsKey(playerProfile.ConnectedRoomName))
+                {
                     Rooms[playerProfile.ConnectedRoomName].ConnectedPlayers.Remove(player.Id);
+                    // Remove player from teams
+                    foreach (var team in Rooms[playerProfile.ConnectedRoomName].Teams) team.PlayersInTeam.Remove(player.Id);
+                }
+
                 // Destroy info from player's profile
                 playerProfile.ConnectedRoomName = string.Empty;
                 UserService.UpdatePlayerProfileData(playerProfile);
+            }
+        }
+
+        /// <summary> Update teams lists on player if he's connected to the room </summary>
+        [RPC] public static void RequestTeams(Player player)
+        {
+            // Get current room which player connected to
+            var playerProfile = UserService.GetPlayerProfileBySID(player.GetSId());
+            if (playerProfile != null && playerProfile.ConnectedRoomName != string.Empty && Rooms.TryGetValue(playerProfile.ConnectedRoomName, out var connectedRoom))
+                UpdateTeamListForPlayer(player, connectedRoom);
+        }
+
+        /// <summary> Add player to the team in its connected room by team id </summary>
+        [RPC] public static void ChooseTeam(Player player, int teamId)
+        {
+            // Get current room which player connected to
+            var playerProfile = UserService.GetPlayerProfileBySID(player.GetSId());
+            if (playerProfile != null && playerProfile.ConnectedRoomName != string.Empty && Rooms.TryGetValue(playerProfile.ConnectedRoomName, out var connectedRoom))
+            {
+                if (connectedRoom != null && teamId < connectedRoom.Teams.Count)
+                {
+                    // Remove player from previous team (if any)
+                    var teams = connectedRoom.Teams.Where(x => x.PlayersInTeam.Contains(player.Id));
+                    foreach (var team in teams) team.PlayersInTeam.Remove(player.Id);
+                    // Connect player to concrete room
+                    connectedRoom.Teams[teamId].PlayersInTeam.Add(player.Id);
+                    
+                    UpdateTeamListForPlayer(player, connectedRoom);
+                }
             }
         }
     }

@@ -8,7 +8,15 @@ namespace VowelAServer.Shared.Models.Multiplayer
     {
         public string Name                          { get; set; }
         public byte MaxPlayersAmount                { get; set; }
-        public HashSet<int> ConnectedPlayers        { get; set; }
+        public List<int> ConnectedPlayers           { get; set; } = new List<int>();
+        public List<RoomTeam> Teams                 { get; set; } = new List<RoomTeam>();
         public bool IsClosed => ConnectedPlayers.Count >= MaxPlayersAmount;
+    }
+
+    [Serializable]
+    public class RoomTeam
+    {
+        public string Name             { get; set; }
+        public List<int> PlayersInTeam { get; set; } = new List<int>();
     }
 }

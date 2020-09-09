@@ -62,7 +62,6 @@ namespace VowelAServer.Server.Controllers
             user.SessionID = Guid.Empty;
             UserService.UpdateUserData(user);
             player.Unregister(playerSId);
-            // TODO: logging out removes connected room data (maybe find a way to save it in db or smth other)
             RPC(player.NetPeer, "AuthController", "OnAuthorized", (AuthResult.Unauthorized, Guid.Empty));
         }
 

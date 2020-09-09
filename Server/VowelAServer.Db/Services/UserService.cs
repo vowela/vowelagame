@@ -53,6 +53,29 @@ namespace VowelAServer.Db.Services
             return users.FindOne(x => x.Login == login);
         }
 
+        /// <summary> Get Player Profile by player's database id </summary>
+        public static PlayerProfile GetPlayerProfileById(int playerId)
+        {
+            using var db = new LiteDatabase(DbContext.DbPath);
+            var users    = db.GetCollection<User>("users");
+
+            var user = users.FindOne(x => x.Id == playerId);
+            if (user == null) return null;
+            
+            var playerProfiles = db.GetCollection<PlayerProfile>("playerProfiles");
+            playerProfiles.EnsureIndex(x => x.Login);
+
+            var playerProfile = playerProfiles.FindOne(x => x.Login == user.Login);
+            if (playerProfile == null)
+            {
+                playerProfile = new PlayerProfile(user.Login);
+                playerProfiles.Insert(playerProfile);
+            }
+
+            return playerProfile;
+        }
+        
+        /// <summary> Get Player Profile by player's session id </summary>
         public static PlayerProfile GetPlayerProfileBySID(Guid sid)
         {
             using var db = new LiteDatabase(DbContext.DbPath);

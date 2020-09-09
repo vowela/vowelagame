@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7294728628825228052
+--- !u!1 &6160516025927830751
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6205180462340870031}
-  - component: {fileID: 870399773010750926}
-  - component: {fileID: 6707575501923982779}
+  - component: {fileID: 7376794379203248196}
+  - component: {fileID: 4347906981326316037}
+  - component: {fileID: 7878064340292407920}
   m_Layer: 5
-  m_Name: ChatMessage
+  m_Name: ChatMessage 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &6205180462340870031
+--- !u!224 &7376794379203248196
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7294728628825228052}
+  m_GameObject: {fileID: 6160516025927830751}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -37,21 +37,21 @@ RectTransform:
   m_AnchoredPosition: {x: 119.99, y: -170}
   m_SizeDelta: {x: 440.0678, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &870399773010750926
+--- !u!222 &4347906981326316037
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7294728628825228052}
+  m_GameObject: {fileID: 6160516025927830751}
   m_CullTransparentMesh: 0
---- !u!114 &6707575501923982779
+--- !u!114 &7878064340292407920
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7294728628825228052}
+  m_GameObject: {fileID: 6160516025927830751}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}

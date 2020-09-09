@@ -84,18 +84,15 @@ public class AuthUI : MonoBehaviour
         }
     }
 
-    /// <summary> Send logout request </summary>
-    public void Logout() => StaticNetworkComponent.RPC("AuthController", "Logout");
-
-    /// <summary> Send login request with login data </summary>
-    public void Login()  => StaticNetworkComponent.RPC("AuthController", "Login", new UserDto {Login = login, Password = password});
+    public void Logout() => AuthController.Logout();
+    public void Login()  => AuthController.Login(new UserDto {Login = login, Password = password});
 
     /// <summary> Send login request with session ID </summary>
     private bool LoginSession()
     {
         if (!PlayerPrefs.HasKey(AuthController.SessionID)) return false;
         var sessionIdStr = PlayerPrefs.GetString(AuthController.SessionID);
-        if (Guid.TryParse(sessionIdStr, out var sessionId)) StaticNetworkComponent.RPC("AuthController", "LoginSession", sessionId);
+        if (Guid.TryParse(sessionIdStr, out var sessionId)) AuthController.LoginSession(sessionId);
         return true;
     }
 

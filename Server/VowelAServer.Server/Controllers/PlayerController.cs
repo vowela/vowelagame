@@ -1,4 +1,5 @@
 using VowelAServer.Db.Services;
+using VowelAServer.Gameplay.Controllers;
 using VowelAServer.Server.Models;
 using VowelAServer.Server.Utils;
 using VowelAServer.Shared.Models;
@@ -14,6 +15,7 @@ namespace VowelAServer.Server.Controllers
             if (!player.IsRegistered) return;
             
             var playerProfile = UserService.GetPlayerProfileBySID(player.GetSId());
+            if (playerProfile != null) playerProfile = RoomsController.ActualizePlayerProfile(playerProfile, player.Id);
             RPC(player.NetPeer, "PlayerController", "SetPlayerData", playerProfile);
         }
 

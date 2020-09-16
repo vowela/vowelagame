@@ -23,7 +23,7 @@ public class ChatUI : MonoBehaviour
 
     private void Start()
     {
-        ChatController.NewMessageEvent += SetNewMessage;
+        ChatController.OnNewMessage.AddListener(SetNewMessage);
         ClearMessages();
         TakeMessages();
     }

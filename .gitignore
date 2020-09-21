@@ -34,3 +34,5 @@ PerformanceTestRunInfo.json
 PerformanceTestRunInfo.json.meta
 
 Storage/time.json
+
+/Client/Assets/Standard Assets/**/*.meta

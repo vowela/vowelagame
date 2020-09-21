@@ -10,26 +10,23 @@ namespace VowelAServer.Db.DbParser
 {
     public class DbViwer
     {
-        private LiteDatabase db;
-
-        public DbViwer(string dbPath)
-        {
-            db = new LiteDatabase(dbPath);
-        }
-
         /// <summary>
         /// Returns names of all collections in the db.
         /// </summary>
-        public IEnumerable<string> GetCollectionNames()
+        public static IEnumerable<string> GetCollectionNames()
         {
+            using var db = new LiteDatabase(DbContext.DbPath);
+            
             return db.GetCollectionNames();
         }
 
         /// <summary>
         /// Returns rows of a collection.
         /// </summary>
-        public List<Row> GetAllItemsInCollection(string name)
+        public static List<Row> GetAllItemsInCollection(string name)
         {
+            using var db = new LiteDatabase(DbContext.DbPath);
+
             var collection = db.GetCollection(name);
 
             var docs = collection.FindAll();
@@ -64,8 +61,10 @@ namespace VowelAServer.Db.DbParser
             return rows;
         }
 
-        public void UpsertItemInCollection(string collectionName, Row row)
+        public static void UpsertItemInCollection(string collectionName, Row row)
         {
+            using var db = new LiteDatabase(DbContext.DbPath);
+
             var collection = db.GetCollection(collectionName);
 
             var dic = new Dictionary<string, BsonValue>();

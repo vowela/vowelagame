@@ -14,6 +14,7 @@ public class MenuUI : MonoBehaviour
     
     public GameObject MainPanel;
     public GameObject RoomPanel;
+    public GameObject DbUI;
 
     public Button BackToRoomButton;
     public Button FindRoomButton;
@@ -97,4 +98,6 @@ public class MenuUI : MonoBehaviour
     }
     
     public void Logout() => AuthController.Logout();
+
+    public void OpenDbView() => DbUI.SetActive(true);
 }

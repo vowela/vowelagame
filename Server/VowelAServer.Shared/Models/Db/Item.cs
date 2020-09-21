@@ -4,6 +4,7 @@ using System.Text;
 
 namespace VowelAServer.Shared.Models.Db
 {
+    [Serializable]
     public class Item
     {
         public string Key { get; set; }
